@@ -1287,7 +1287,7 @@ function musclesText(id) {
   return { p: p.map(k => MUSCLE_NAMES[k]), s: s.map(k => MUSCLE_NAMES[k]) };
 }
 
-// ===== Built-in food database: per 100 g (protein, carbs, fat), common units in grams =====
+// ===== Built-in food database (restaurant items from the chains' published US nutrition, approximate): per 100 g (protein, carbs, fat), common units in grams =====
 const FOOD_RAW = `Chicken breast, cooked|31|0|3.6|breast:170|grilled chicken,chicken
 Chicken breast, raw|23|0|1.2|breast:200|
 Chicken thigh, cooked|26|0|10.9|thigh:100|
@@ -1406,7 +1406,144 @@ Beer|0.5|3.6|0|can:356|
 Coffee, black|0.1|0|0|cup:237|coffee
 Latte, 2% milk|3.4|5|2|cup:240;grande:470|coffee
 Vanilla ice cream|3.5|24|11|cup:132|ice cream
-Chocolate chip cookie|5|65|23|cookie:30|cookie`;
+Chocolate chip cookie|5|65|23|cookie:30|cookie
+McDonald's Big Mac|11.4|21.0|15.5|burger:219|mcdonalds mcd mickey d  fast food restaurant
+McDonald's Quarter Pounder with Cheese|14.9|20.8|12.9|burger:202|mcdonalds mcd mickey d qpc fast food restaurant
+McDonald's McDouble|14.6|21.9|13.2|burger:151|mcdonalds mcd mickey d  fast food restaurant
+McDonald's Cheeseburger|13.2|28.1|11.4|burger:114|mcdonalds mcd mickey d  fast food restaurant
+McDonald's Hamburger|12.0|31.0|9.0|burger:100|mcdonalds mcd mickey d  fast food restaurant
+McDonald's McChicken|9.8|27.3|14.7|sandwich:143|mcdonalds mcd mickey d  fast food restaurant
+McDonald's Filet-O-Fish|11.3|27.5|13.4|sandwich:142|mcdonalds mcd mickey d fish fast food restaurant
+McDonald's Chicken McNuggets, 6 pc|14.4|15.5|15.5|order:97|mcdonalds mcd mickey d nuggets fast food restaurant
+McDonald's Chicken McNuggets, 10 pc|14.2|15.4|14.8|order:162|mcdonalds mcd mickey d nuggets fast food restaurant
+McDonald's French fries, medium|3.6|38.7|13.5|order:111|mcdonalds mcd mickey d fries fast food restaurant
+McDonald's French fries, large|4.2|38.7|13.7|order:168|mcdonalds mcd mickey d fries fast food restaurant
+McDonald's Egg McMuffin|12.4|21.9|9.5|sandwich:137|mcdonalds mcd mickey d breakfast fast food restaurant
+McDonald's Sausage McMuffin with Egg|12.1|18.2|18.8|sandwich:165|mcdonalds mcd mickey d breakfast fast food restaurant
+McDonald's Hash brown|1.9|30.2|15.1|piece:53|mcdonalds mcd mickey d breakfast fast food restaurant
+McDonald's Hotcakes, no syrup|5.3|36.7|6.0|order:150|mcdonalds mcd mickey d pancakes breakfast fast food restaurant
+Chick-fil-A Chicken Sandwich|17.1|24.1|10.6|sandwich:170|chickfila chick fil a cfa  fast food restaurant
+Chick-fil-A Spicy Chicken Sandwich|16.1|24.1|10.9|sandwich:174|chickfila chick fil a cfa  fast food restaurant
+Chick-fil-A Grilled Chicken Sandwich|14.0|22.0|6.0|sandwich:200|chickfila chick fil a cfa  fast food restaurant
+Chick-fil-A Nuggets, 8 ct|23.9|9.7|9.7|order:113|chickfila chick fil a cfa  fast food restaurant
+Chick-fil-A Grilled Nuggets, 8 ct|22.1|0.9|2.7|order:113|chickfila chick fil a cfa  fast food restaurant
+Chick-fil-A Grilled Nuggets, 12 ct|22.4|1.2|2.6|order:170|chickfila chick fil a cfa  fast food restaurant
+Chick-fil-A Chick-n-Strips, 3 ct|20.7|11.9|11.1|order:135|chickfila chick fil a cfa strips tenders fast food restaurant
+Chick-fil-A Waffle fries, medium|4.0|36.0|19.2|order:125|chickfila chick fil a cfa fries fast food restaurant
+Chick-fil-A Chicken biscuit|13.1|33.8|15.2|sandwich:145|chickfila chick fil a cfa breakfast fast food restaurant
+Chick-fil-A Egg white grill|15.0|16.7|4.4|sandwich:180|chickfila chick fil a cfa breakfast fast food restaurant
+Chipotle Chicken (4 oz)|28.3|0.0|6.2|serving:113|burrito bowl  fast food restaurant
+Chipotle Steak (4 oz)|18.6|0.9|5.3|serving:113|burrito bowl  fast food restaurant
+Chipotle Carnitas (4 oz)|20.4|0.0|10.6|serving:113|burrito bowl  fast food restaurant
+Chipotle Barbacoa (4 oz)|21.2|1.8|6.2|serving:113|burrito bowl  fast food restaurant
+Chipotle Sofritas (4 oz)|7.1|8.0|8.8|serving:113|burrito bowl tofu fast food restaurant
+Chipotle White rice (4 oz)|3.5|35.4|3.5|serving:113|burrito bowl  fast food restaurant
+Chipotle Brown rice (4 oz)|3.5|31.9|5.3|serving:113|burrito bowl  fast food restaurant
+Chipotle Black beans (4 oz)|7.1|19.5|1.3|serving:113|burrito bowl  fast food restaurant
+Chipotle Pinto beans (4 oz)|7.1|18.6|1.3|serving:113|burrito bowl  fast food restaurant
+Chipotle Fajita veggies|1.8|8.8|0.0|serving:57|burrito bowl  fast food restaurant
+Chipotle Flour tortilla (burrito)|7.1|44.2|8.0|tortilla:113|burrito bowl  fast food restaurant
+Chipotle Guacamole (4 oz)|1.8|7.1|19.5|serving:113|burrito bowl guac fast food restaurant
+Chipotle Cheese|21.4|3.6|28.6|serving:28|burrito bowl  fast food restaurant
+Chipotle Sour cream|3.5|3.5|15.8|serving:57|burrito bowl  fast food restaurant
+Chipotle Queso blanco|8.8|7.0|15.8|serving:57|burrito bowl  fast food restaurant
+Chipotle Tomato salsa|0.0|4.0|0.0|serving:99|burrito bowl pico fast food restaurant
+Chipotle Chicken bowl (rice, black beans, fajitas, salsa, cheese, lettuce)|9.4|13.3|3.8|bowl:540|burrito bowl  fast food restaurant
+Chipotle Chicken burrito (rice, black beans, fajitas, salsa, cheese, lettuce)|9.1|18.8|4.5|burrito:650|burrito bowl  fast food restaurant
+Subway 6-inch Turkey Breast|9.1|20.9|1.6|sub:220|sandwich sub  fast food restaurant
+Subway Footlong Turkey Breast|9.1|20.9|1.6|sub:440|sandwich sub  fast food restaurant
+Subway 6-inch Italian B.M.T.|8.3|19.1|7.4|sub:230|sandwich sub bmt fast food restaurant
+Subway 6-inch Chicken Teriyaki|9.6|19.2|1.7|sub:260|sandwich sub sweet onion fast food restaurant
+Subway 6-inch Meatball Marinara|7.2|18.6|6.2|sub:290|sandwich sub  fast food restaurant
+Subway 6-inch Tuna|7.9|17.9|10.4|sub:240|sandwich sub  fast food restaurant
+Subway 6-inch Steak & Cheese|9.2|18.4|4.0|sub:250|sandwich sub philly fast food restaurant
+Subway 6-inch Rotisserie Chicken|11.6|18.0|2.4|sub:250|sandwich sub  fast food restaurant
+Taco Bell Crunchy Taco|10.3|16.7|11.5|taco:78|tacobell  fast food restaurant
+Taco Bell Soft Taco|9.1|18.2|8.1|taco:99|tacobell  fast food restaurant
+Taco Bell Chicken Quesadilla|14.2|20.2|15.3|quesadilla:183|tacobell  fast food restaurant
+Taco Bell Crunchwrap Supreme|6.3|28.0|8.3|item:254|tacobell  fast food restaurant
+Taco Bell Bean Burrito|6.6|27.8|4.5|burrito:198|tacobell  fast food restaurant
+Taco Bell Cheesy Gordita Crunch|13.1|26.8|18.3|item:153|tacobell  fast food restaurant
+Taco Bell Burrito Supreme, beef|6.5|21.0|6.0|burrito:248|tacobell  fast food restaurant
+Taco Bell Chicken Power Menu Bowl|6.9|12.3|5.1|bowl:375|tacobell cantina fast food restaurant
+Taco Bell Nachos BellGrande|5.2|26.6|11.4|order:308|tacobell nachos fast food restaurant
+Wendy's Dave's Single|12.0|15.6|14.8|burger:250|wendys daves fast food restaurant
+Wendy's Dave's Double|14.5|12.4|16.7|burger:330|wendys daves fast food restaurant
+Wendy's Jr. Cheeseburger|12.8|22.2|12.0|burger:117|wendys  fast food restaurant
+Wendy's Spicy Chicken Sandwich|12.7|22.3|9.1|sandwich:220|wendys  fast food restaurant
+Wendy's Grilled Chicken Sandwich|14.8|15.7|4.3|sandwich:230|wendys  fast food restaurant
+Wendy's Chicken Nuggets, 10 pc|14.7|18.0|19.3|order:150|wendys nuggets fast food restaurant
+Wendy's French fries, medium|4.0|37.6|12.8|order:125|wendys fries fast food restaurant
+Wendy's Chili, small|7.5|10.1|4.0|cup:227|wendys  fast food restaurant
+Wendy's Baked potato, plain|2.5|21.5|0.0|potato:284|wendys  fast food restaurant
+Wendy's Frosty, small chocolate|3.5|22.0|3.5|cup:255|wendys dessert fast food restaurant
+Burger King Whopper|9.7|16.9|13.8|burger:290|burgerking bk  fast food restaurant
+Burger King Whopper Jr.|10.3|19.3|12.4|burger:145|burgerking bk  fast food restaurant
+Burger King Double Cheeseburger|16.7|18.0|14.0|burger:150|burgerking bk  fast food restaurant
+Burger King Chicken Fries, 9 pc|15.3|22.4|20.0|order:85|burgerking bk  fast food restaurant
+Burger King Original Chicken Sandwich|12.7|24.5|18.2|sandwich:220|burgerking bk  fast food restaurant
+Burger King French fries, medium|3.9|41.4|13.3|order:128|burgerking bk fries fast food restaurant
+Five Guys Hamburger|14.7|14.7|16.2|burger:265|fiveguys 5 guys  fast food restaurant
+Five Guys Cheeseburger|15.7|13.3|18.3|burger:300|fiveguys 5 guys  fast food restaurant
+Five Guys Little Hamburger|12.4|21.0|14.0|burger:186|fiveguys 5 guys  fast food restaurant
+Five Guys Fries, regular|3.2|31.9|10.0|order:411|fiveguys 5 guys fries fast food restaurant
+Five Guys Fries, little|3.3|31.7|10.0|order:180|fiveguys 5 guys fries fast food restaurant
+In-N-Out Double-Double|11.2|11.8|12.4|burger:330|innout in n out double double fast food restaurant
+In-N-Out Double-Double, protein style|10.0|3.3|11.8|burger:330|innout in n out lettuce wrap fast food restaurant
+In-N-Out Cheeseburger|8.2|14.6|10.1|burger:268|innout in n out  fast food restaurant
+In-N-Out Hamburger|6.6|16.0|7.8|burger:243|innout in n out  fast food restaurant
+In-N-Out French fries|4.8|39.2|12.0|order:125|innout in n out fries fast food restaurant
+Panda Express Orange Chicken|15.4|31.5|14.2|serving:162|panda  fast food restaurant
+Panda Express Grilled Teriyaki Chicken|21.2|4.7|7.6|serving:170|panda  fast food restaurant
+Panda Express Kung Pao Chicken|9.9|8.6|11.7|serving:162|panda  fast food restaurant
+Panda Express Broccoli Beef|5.9|8.5|4.6|serving:153|panda  fast food restaurant
+Panda Express Beijing Beef|8.6|28.4|14.8|serving:162|panda  fast food restaurant
+Panda Express String Bean Chicken Breast|7.5|8.2|5.7|serving:159|panda  fast food restaurant
+Panda Express Chow Mein|4.9|30.1|7.5|side:266|panda  fast food restaurant
+Panda Express Fried Rice|4.1|32.0|6.0|side:266|panda  fast food restaurant
+Panda Express Steamed White Rice|2.8|30.2|0.0|side:288|panda  fast food restaurant
+Panda Express Super Greens|2.4|3.9|1.2|side:255|panda  fast food restaurant
+KFC Original Recipe breast|21.7|6.1|11.7|piece:180|kentucky fried chicken  fast food restaurant
+KFC Original Recipe thigh|15.1|6.3|15.1|piece:126|kentucky fried chicken  fast food restaurant
+KFC Original Recipe drumstick|25.0|6.7|13.3|piece:60|kentucky fried chicken  fast food restaurant
+KFC Extra Crispy Tenders, 3 pc|21.2|15.0|11.2|order:160|kentucky fried chicken  fast food restaurant
+KFC Mashed potatoes with gravy|2.0|12.6|3.0|side:151|kentucky fried chicken  fast food restaurant
+KFC Mac & cheese|4.4|12.5|5.9|side:136|kentucky fried chicken  fast food restaurant
+Popeyes Classic Chicken Sandwich|12.2|21.7|18.3|sandwich:230|popeye  fast food restaurant
+Popeyes Tenders, 3 pc|18.1|15.0|11.2|order:160|popeye  fast food restaurant
+Popeyes Cajun fries, regular|2.8|32.4|12.0|order:108|popeye fries fast food restaurant
+Raising Cane's Chicken finger|28.9|13.3|13.3|finger:45|canes raising canes tender fast food restaurant
+Raising Cane's Cane's sauce|0.0|14.0|44.2|cup:43|canes raising canes  fast food restaurant
+Raising Cane's Crinkle fries|2.9|32.9|10.7|order:140|canes raising canes fries fast food restaurant
+Raising Cane's Texas toast|8.5|46.8|17.0|slice:47|canes raising canes  fast food restaurant
+Starbucks Caffè Latte, grande 2%|2.7|4.0|1.5|drink:473|sbux coffee latte fast food restaurant
+Starbucks Caramel Macchiato, grande 2%|2.1|7.4|1.5|drink:473|sbux coffee  fast food restaurant
+Starbucks Cold Brew with sweet cream, grande|0.2|3.0|2.5|drink:473|sbux coffee  fast food restaurant
+Starbucks Egg white & roasted red pepper egg bites (2)|9.2|8.5|6.2|order:130|sbux coffee sous vide fast food restaurant
+Starbucks Bacon & Gruyère egg bites (2)|14.6|6.9|15.4|order:130|sbux coffee sous vide fast food restaurant
+Starbucks Turkey bacon, cheddar & egg white sandwich|13.6|22.4|4.0|sandwich:125|sbux coffee breakfast fast food restaurant
+Starbucks Eggs & cheese protein box|10.0|17.0|10.4|box:230|sbux coffee  fast food restaurant
+Dunkin' Glazed donut|4.3|47.1|15.7|donut:70|dunkin donuts  fast food restaurant
+Dunkin' Wake-Up Wrap, egg & cheese|8.2|16.5|11.8|wrap:85|dunkin donuts breakfast fast food restaurant
+Dunkin' Bacon, egg & cheese on croissant|11.2|22.4|18.2|sandwich:170|dunkin donuts breakfast fast food restaurant
+Domino's Cheese pizza, medium hand tossed (1 slice)|10.7|33.3|9.3|slice:75|dominos pizza  fast food restaurant
+Domino's Pepperoni pizza, medium hand tossed (1 slice)|12.2|30.5|12.2|slice:82|dominos pizza  fast food restaurant
+Domino's Cheese pizza, large hand tossed (1 slice)|11.3|34.0|10.4|slice:106|dominos pizza  fast food restaurant
+Pizza Hut Pepperoni pizza, medium hand tossed (1 slice)|11.5|27.1|11.5|slice:96|pizzahut pizza  fast food restaurant
+Pizza Hut Cheese pizza, medium pan (1 slice)|10.0|26.4|10.9|slice:110|pizzahut pizza  fast food restaurant
+Olive Garden Breadstick|10.9|54.3|5.4|breadstick:46|olivegarden  fast food restaurant
+Olive Garden Chicken Alfredo (dinner)|14.4|18.3|16.3|plate:520|olivegarden fettuccine fast food restaurant
+Olive Garden House salad, no dressing|1.3|5.3|1.3|serving:150|olivegarden  fast food restaurant
+Texas Roadhouse 6 oz sirloin|27.1|0.0|3.5|steak:170|steakhouse  fast food restaurant
+Texas Roadhouse Dinner roll with cinnamon butter|5.7|35.7|11.4|roll:70|steakhouse  fast food restaurant
+Panera Mac & cheese, cup|6.2|14.1|11.5|cup:227|panera bread  fast food restaurant
+Panera Turkey & avocado BLT on sourdough|10.6|18.9|8.9|sandwich:350|panera bread  fast food restaurant
+Panera Greek salad with chicken|10.9|3.9|10.3|bowl:330|panera bread  fast food restaurant
+Premier Protein shake|9.2|1.5|0.9|bottle:325| protein shake fast food restaurant
+Fairlife Core Power 26g|6.3|2.2|1.1|bottle:414| protein shake fast food restaurant
+Quest protein bar|35.0|36.7|13.3|bar:60| protein bar fast food restaurant
+Muscle Milk shake|6.0|2.2|1.1|bottle:414| protein shake fast food restaurant
+RXBAR|23.1|46.2|17.3|bar:52| protein bar fast food restaurant`;
 
 const FOODS = FOOD_RAW.split('\n').map(line => {
   const [name, p, c, f, units, alias] = line.split('|');
@@ -1437,7 +1574,7 @@ function searchFoods(q) {
     const score = (nm.startsWith(toks[0]) ? 0 : 2) + (nm.includes(toks.join(' ')) ? 0 : 1) + (nm.includes('raw') && !toks.includes('raw') ? 0.6 : 0) + nm.length / 100;
     out.push([score, i]);
   });
-  return out.sort((a, b) => a[0] - b[0]).slice(0, 6).map(x => x[1]);
+  return out.sort((a, b) => a[0] - b[0]).slice(0, 8).map(x => x[1]);
 }
 function unitGrams(food, unit) {
   if (BASE_UNITS[unit]) return BASE_UNITS[unit];
@@ -2325,7 +2462,7 @@ function viewMacros() {
   let h = `<div class="datenav"><button class="btn ghost" data-act="mdate" data-d="-1">‹</button><b>${label}</b><button class="btn ghost" data-act="mdate" data-d="1" ${k >= today ? 'disabled' : ''}>›</button></div>
   <div class="card"><div class="kcalbig"><b>${Math.abs(Math.round(left)).toLocaleString()}</b><span>${left >= 0 ? 'calories left' : 'calories over'}</span><small class="muted">${Math.round(tot.kcal).toLocaleString()} eaten of ${t.kcal.toLocaleString()}</small></div>
     ${bar('Calories', tot.kcal, t.kcal, 'kcal', 'k')}${bar('Protein', tot.p, t.p, 'g', 'p')}${bar('Carbs', tot.c, t.c, 'g', 'c')}${bar('Fat', tot.f, t.f, 'g', 'f')}</div>
-  ${goalCard()}${viewLeft(t, tot)}
+  ${goalCard()}
   <div class="card"><div class="phead"><h3>Add food</h3></div>
     <div class="segs"><button class="${UI.fmode !== 'manual' ? 'on' : ''}" data-act="fmode" data-m="lookup">Look it up</button><button class="${UI.fmode === 'manual' ? 'on' : ''}" data-act="fmode" data-m="manual">Enter macros myself</button></div>
     ${UI.fmode === 'manual' ? `<form id="foodform" class="foodform" autocomplete="off">
@@ -2354,6 +2491,7 @@ function viewMacros() {
     const tt = dayTotals(d), hgt = tt.kcal / maxK * 100, hitP = tt.p >= t.p * 0.9;
     return `<button class="wday ${d === k ? 'on' : ''}" data-act="mdate-set" data-k="${d}"><div class="wbar"><i style="height:${hgt}%" class="${tt.kcal > t.kcal * 1.05 ? 'over' : ''}"></i><s style="bottom:${t.kcal / maxK * 100}%"></s></div><small>${parseKey(d).toLocaleDateString(undefined, { weekday: 'narrow' })}</small><em class="${hitP ? 'hit' : ''}">${tt.kcal ? (hitP ? '✓P' : '·') : ''}</em></button>`;
   }).join('')}</div><p class="muted small">Line = calorie target. ✓P = hit at least 90% of your protein.</p></div>`;
+  h += viewLeft(t, tot);
   return h;
 }
 function addEntry(f, k = UI.macroDate) {
