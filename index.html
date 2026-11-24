@@ -178,7 +178,7 @@ option{background:#141027;color:#fff}
 .rktop b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rkval{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
 .rkbar{height:6px;border-radius:4px;background:rgba(255,255,255,.07);margin-top:6px;overflow:hidden}.rkbar i{display:block;height:100%;border-radius:4px;background:var(--grad)}.rkbar i.neg{background:#64748b}
 .scroll{overflow-x:auto}.rktable{width:100%;border-collapse:collapse;font-size:13px}.rktable th,.rktable td{padding:8px 6px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}.rktable th:first-child,.rktable td:first-child{text-align:left;color:var(--mut)}
-.rktable td.best{color:#f9a8d4;font-weight:800}.whoami{margin:10px 0 14px}
+.rktable td.best{color:#f9a8d4;font-weight:800}.whoami{margin:10px 0 14px}.liftseg button{font-size:12px;padding:7px 2px}.strstats{margin:4px 0 8px;padding:0;background:none;border:0}.strtable td.up{color:#86efac;font-weight:700}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 </style>
 </head>
 <body>
@@ -1844,11 +1844,47 @@ function render() {
 function exLine(e) { return `${e.sets} × ${e.lo}–${e.hi} reps · rest ${e.rest}s`; }
 function lastLine(id) { const l = lastFor(id); return l ? `Last: ${l.sets.map(s => `${s.w}×${s.r}`).join(', ')}` : 'No history yet'; }
 
+// ---------- Strength: best lifts from workouts and quick max tests ----------
+const LIFTS = [['bb_bench', 'Bench press'], ['bb_squat', 'Squat'], ['bb_deadlift', 'Deadlift'], ['bb_ohp', 'Overhead press'], ['bb_row', 'Barbell row']];
+const BIG3 = ['bb_bench', 'bb_squat', 'bb_deadlift'];
+// best estimated 1-rep max per lift for one person, from `since` (ms) on
+function liftBests(st, since = 0) {
+  const best = {}, put = (id, w, r, t) => { if (t < since) return; const v = +r === 1 ? +w || 0 : e1rm(+w || 0, Math.min(+r || 0, 12)); if (v > (best[id] || 0)) best[id] = v; };
+  for (const s of Object.values(st.sessions || {})) if (s && Array.isArray(s.ex)) for (const e of s.ex) if (LIFTS.some(l => l[0] === e.id)) for (const z of (e.sets || [])) put(e.id, z.w, z.r, s.start);
+  for (const [id, arr] of Object.entries((st.settings && st.settings.lifts) || {})) for (const x of (arr || [])) put(id, x.w, x.r, x.t || 0);
+  for (const k in best) best[k] = Math.round(best[k]);
+  return best;
+}
+function strengthOf(st, since = 0) {
+  const b = liftBests(st, since), bw = +(st.settings.profile || {}).weightLb || 0;
+  const have = BIG3.filter(k => b[k]);
+  const total = have.length ? BIG3.reduce((t, k) => t + (b[k] || 0), 0) : null;
+  return { bests: b, total, ratio: total && bw ? total / bw : null, bw, complete: have.length === 3 };
+}
+// rough guide only: Big 3 total as a multiple of body weight
+function strengthLevel(ratio, fem) {
+  if (ratio == null) return null;
+  const k = fem ? 0.7 : 1, lv = [[2 * k, 'Beginner'], [3.25 * k, 'Novice'], [4.5 * k, 'Intermediate'], [5.5 * k, 'Advanced']];
+  for (const [t, n] of lv) if (ratio < t) return n;
+  return 'Elite';
+}
+function strengthCard() {
+  const now = strengthOf(S), prev = strengthOf({ ...S, sessions: Object.fromEntries(Object.entries(S.sessions).filter(([, s]) => s.start < Date.now() - 30 * 864e5)), settings: { ...S.settings, lifts: Object.fromEntries(Object.entries(S.settings.lifts || {}).map(([k, v]) => [k, v.filter(x => (x.t || 0) < Date.now() - 30 * 864e5)])) } });
+  const lvl = strengthLevel(now.ratio, S.settings.profile.sex === 'f');
+  const rows = LIFTS.map(([id, name]) => { const v = now.bests[id], p = prev.bests[id], d = v && p ? v - p : null;
+    return `<tr><td>${name}${BIG3.includes(id) ? '' : ' <small class="muted">(extra)</small>'}</td><td>${v ? v + ' lb' : '<span class="muted">—</span>'}</td><td>${v && now.bw ? (v / now.bw).toFixed(2) + '×' : ''}</td><td class="${d > 0 ? 'up' : ''}">${d ? (d > 0 ? '+' : '') + d : ''}</td></tr>`; }).join('');
+  return `<div class="card"><div class="phead"><h3>Strength</h3><button class="btn small ghost" data-act="sheet" data-s="liftlog">+ Log a max</button></div>
+    <div class="stats strstats"><div><b>${now.total ? now.total.toLocaleString() : '—'}</b><small>Big 3 total (lb)</small></div><div><b>${now.ratio ? now.ratio.toFixed(2) + '×' : '—'}</b><small>× body weight</small></div><div><b>${lvl || '—'}</b><small>level (rough guide)</small></div></div>
+    <table class="rktable strtable"><thead><tr><th>Lift</th><th>Best 1RM</th><th>× BW</th><th>30 days</th></tr></thead><tbody>${rows}</tbody></table>
+    <p class="small muted">Best 1RM is estimated from your heaviest sets (weight × (1 + reps ÷ 30)). It updates from your workouts, or log a quick test set with "Log a max". The Big 3 are bench, squat and deadlift.${now.total && !now.complete ? ' Log all three for a full total.' : ''}</p></div>`;
+}
+
 // ---------- Ranking: compare everyone in the group ----------
 const RK_PERIODS = [['week', 'This week', 7], ['month', '30 days', 30], ['all', 'All time', 0]];
 const RK_METRICS = [
   ['workouts', 'Workouts', 'workouts done'], ['sets', 'Sets', 'sets logged'], ['volume', 'Volume', 'lb lifted (weight × reps)'],
-  ['days', 'Gym days', 'different days trained'], ['strength', 'Strength', 'average strength gain on repeated exercises'],
+  ['days', 'Gym days', 'different days trained'], ['total', 'Big 3 total', 'best bench + squat + deadlift (estimated 1RM)'], ['ratio', 'Strength × BW', 'Big 3 total divided by body weight, fair across sizes'],
+  ['lift', 'Best lift', 'estimated 1-rep max on one lift'], ['strength', 'Strength gain', 'average strength gain on repeated exercises'],
   ['weight', 'Weight goal', 'body weight moved toward their goal'], ['protein', 'Protein', 'days protein target was hit'],
 ];
 function rkStats(pid, days) {
@@ -1874,7 +1910,9 @@ function rkStats(pid, days) {
   const tp = (st.settings.targets && st.settings.targets.p) || 0;
   let protein = 0;
   if (tp) for (const [k, d] of Object.entries(st.macros || {})) { if (k < sinceKey || !d || !d.entries) continue; const p = d.entries.reduce((x, e) => x + (+e.p || 0), 0); if (p >= tp * 0.9) protein++; }
-  return { workouts: ss.length, sets, volume: Math.round(volume), days: dset.size, strength, weight, wDelta, protein };
+  const sg = strengthOf(st, 0); // strength is each person's best ever, whatever the period
+  const lift = sg.bests[(UI.rk && UI.rk.l) || 'bb_bench'] || null;
+  return { workouts: ss.length, sets, volume: Math.round(volume), days: dset.size, strength, weight, wDelta, protein, total: sg.total, ratio: sg.ratio, lift, liftBw: lift && sg.bw ? lift / sg.bw : null };
 }
 function rkFmt(m, s) {
   const v = s[m];
@@ -1883,6 +1921,9 @@ function rkFmt(m, s) {
   if (m === 'strength') return (v >= 0 ? '+' : '') + v.toFixed(1) + '%';
   if (m === 'weight') return (v >= 0 ? '+' : '') + v.toFixed(1) + '%' + (s.wDelta != null ? ` <small class="muted">(${s.wDelta > 0 ? '+' : ''}${s.wDelta.toFixed(1)} lb)</small>` : '');
   if (m === 'protein') return v + (v === 1 ? ' day' : ' days');
+  if (m === 'total') return v.toLocaleString() + ' lb';
+  if (m === 'ratio') return v.toFixed(2) + '×';
+  if (m === 'lift') return v + ' lb' + (s.liftBw ? ` <small class="muted">(${s.liftBw.toFixed(2)}× BW)</small>` : '');
   return String(v);
 }
 function viewRanking() {
@@ -1896,14 +1937,15 @@ function viewRanking() {
   let h = `<div class="card"><div class="phead"><h3>Ranking</h3><span class="small muted">${PROFILES.list.length} ${PROFILES.list.length === 1 ? 'person' : 'people'}</span></div>
     <div class="segs">${RK_PERIODS.map(([k, l]) => `<button class="${k === per[0] ? 'on' : ''}" data-act="rk-p" data-v="${k}">${l}</button>`).join('')}</div>
     <div class="chips rkchips">${RK_METRICS.map(([k, l]) => `<button class="pchip ${k === met[0] ? 'on' : ''}" data-act="rk-m" data-v="${k}">${l}</button>`).join('')}</div>
-    <p class="small muted rkdesc">Ranked by ${met[2]}.</p>`;
-  if (!ranked.length) h += `<p class="muted">No one has ${met[0] === 'weight' ? 'logged their weight' : met[0] === 'protein' ? 'hit their protein target' : 'logged a workout'} ${per[0] === 'all' ? 'yet' : 'in this period'}.</p>`;
+    ${met[0] === 'lift' ? `<div class="segs liftseg">${LIFTS.map(([k, l]) => `<button class="${k === (UI.rk.l || 'bb_bench') ? 'on' : ''}" data-act="rk-l" data-v="${k}">${{ bb_bench: 'Bench', bb_squat: 'Squat', bb_deadlift: 'Deadlift', bb_ohp: 'OHP', bb_row: 'Row' }[k]}</button>`).join('')}</div>` : ''}
+    <p class="small muted rkdesc">${['total', 'ratio', 'lift'].includes(met[0]) ? 'Uses each person’s best ever. ' : ''}Ranked by ${met[2]}${met[0] === 'lift' ? ` (${(LIFTS.find(l => l[0] === (UI.rk.l || 'bb_bench')) || LIFTS[0])[1].toLowerCase()})` : ''}.</p>`;
+  if (!ranked.length) h += `<p class="muted">No one has ${met[0] === 'weight' ? 'logged their weight' : met[0] === 'protein' ? 'hit their protein target' : ['total', 'ratio', 'lift'].includes(met[0]) ? 'logged this lift (Progress → Strength → Log a max)' : 'logged a workout'} ${per[0] === 'all' ? 'yet' : 'in this period'}.</p>`;
   h += `<div class="rklist">${ranked.map((r, i) => { const v = r.s[met[0]], w = Math.max(4, Math.abs(v) / top * 100);
     return `<div class="rkrow ${r.p.id === curPid() ? 'me' : ''} ${i === 0 ? 'lead' : ''}"><span class="rkmed">${medal(i)}</span><span class="avatar sm">${esc((r.p.name || '?')[0].toUpperCase())}</span><div class="rkmain"><div class="rktop"><b>${esc(r.p.name)}</b><span class="rkval">${rkFmt(met[0], r.s)}</span></div><div class="rkbar"><i style="width:${w.toFixed(1)}%" class="${v < 0 ? 'neg' : ''}"></i></div></div></div>`; }).join('')}
     ${rest.map(r => `<div class="rkrow dim"><span class="rkmed">–</span><span class="avatar sm">${esc((r.p.name || '?')[0].toUpperCase())}</span><div class="rkmain"><div class="rktop"><b>${esc(r.p.name)}</b><span class="rkval muted">no data</span></div></div></div>`).join('')}</div></div>`;
   // side by side
   h += `<div class="card"><h3>Side by side · ${per[1].toLowerCase()}</h3><div class="scroll"><table class="rktable"><thead><tr><th></th>${rows.map(r => `<th>${esc(r.p.name)}</th>`).join('')}</tr></thead><tbody>
-    ${RK_METRICS.map(([k, l]) => { const vals = rows.map(r => r.s[k]).filter(v => v != null); const best = vals.length ? Math.max(...vals) : null;
+    ${RK_METRICS.filter(([k]) => k !== 'lift').map(([k, l]) => { const vals = rows.map(r => r.s[k]).filter(v => v != null); const best = vals.length ? Math.max(...vals) : null;
       return `<tr><td>${l}</td>${rows.map(r => `<td class="${r.s[k] != null && r.s[k] === best && (best > 0 || k === 'weight' || k === 'strength') && rows.length > 1 ? 'best' : ''}">${rkFmt(k, r.s)}</td>`).join('')}</tr>`; }).join('')}
     </tbody></table></div>
     ${GROUP.on ? '<p class="small muted">Everyone who opens this link shares one group. New people show up here as soon as they add themselves.</p>' : '<p class="small muted">Shows the people on this device. Open the group link to compare with everyone.</p>'}</div>`;
@@ -1977,6 +2019,14 @@ function viewWorkout() {
 
 function viewSheet() {
   const a = S.active;
+  if (UI.sheet === 'liftlog') {
+    return `<div class="panel"><div class="phead"><h3>Log a max</h3><button class="x" data-act="close">✕</button></div>
+      <p class="small muted">Enter your heaviest set. A true 1-rep max is fine, or any set of up to 12 reps and it estimates the 1RM.</p>
+      <label>Lift<select id="ll-id">${LIFTS.map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select></label>
+      <div class="row2"><label>Weight (lb)<input id="ll-w" type="number" inputmode="decimal" placeholder="225"></label><label>Reps<input id="ll-r" type="number" inputmode="numeric" value="1"></label></div>
+      <div class="formerr" id="ll-err"></div>
+      <button class="btn primary big" data-act="lift-save">Save</button></div>`;
+  }
   if (UI.sheet === 'whoami') {
     return `<div class="panel"><div class="phead"><h3>Who's using this phone?</h3></div>
       <p class="small muted">Pick yourself so your workouts and food save under your name. You can switch any time from the name button at the top.</p>
@@ -2058,6 +2108,7 @@ function viewProgress() {
   const ss = sessionsSorted();
   const weekAgo = Date.now() - 7 * 864e5;
   let h = `<div class="stats card"><div><b>${ss.filter(s => s.start > weekAgo).length}</b><small>workouts this week</small></div><div><b>${ss.length}</b><small>total workouts</small></div><div><b>${ss.reduce((t, s) => t + s.ex.reduce((u, e) => u + e.sets.length, 0), 0)}</b><small>total sets</small></div></div>`;
+  h += strengthCard();
   // my body
   const heat = weekHeat(); const top = Object.entries(heat).filter(([, v]) => v > 0).sort((x, y) => y[1] - x[1]);
   const untrained = Object.keys(MUSCLE_NAMES).filter(k => !(heat[k] > 0));
@@ -2689,6 +2740,11 @@ document.addEventListener('click', ev => {
     case 'create-prof': createProfile(); break;
     case 'rk-p': UI.rk.p = b.dataset.v; render(); break;
     case 'rk-m': UI.rk.m = b.dataset.v; render(); break;
+    case 'rk-l': UI.rk.l = b.dataset.v; render(); break;
+    case 'lift-save': { const id = $('#ll-id').value, w = num($('#ll-w').value), r = Math.round(num($('#ll-r').value)); const er = $('#ll-err');
+      if (!(w > 0 && w < 2000)) { er.textContent = 'Enter the weight in pounds.'; break; } if (!(r >= 1 && r <= 12)) { er.textContent = 'Reps must be 1 to 12.'; break; }
+      const before = strengthOf(S).bests[id] || 0; S.settings.lifts = S.settings.lifts || {}; (S.settings.lifts[id] = S.settings.lifts[id] || []).push({ w, r, t: Date.now() }); touch('settings');
+      const now = strengthOf(S).bests[id]; UI.sheet = null; render(); toast(now > before ? `New best: ${(LIFTS.find(l => l[0] === id) || [, id])[1]} ${now} lb` : 'Saved'); break; }
     case 'iam': localSet('gymapp.me', b.dataset.id); switchProfile(b.dataset.id); toast('Hi ' + curProfile().name + '!'); break;
     case 'newme': UI.newMe = true; UI.sheet = 'newprofile'; render(); break;
     case 'set-code': { const v = ($('#gc-in').value || '').trim(); if (!v) break; GROUP.code = v; localSet('gymapp.code', v); UI.sheet = null; Sync.col = null; render(); initSync(); break; }
