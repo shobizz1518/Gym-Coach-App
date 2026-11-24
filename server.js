@@ -47,7 +47,7 @@ if (process.env.DATABASE_URL) {
 function splitId(id) { const m = id.match(/^pr_(.+?)__(.+)$/); return m ? { pid: m[1], key: m[2] } : { pid: 'main', key: id }; }
 const isPrivate = id => { if (id === 'profiles') return false; const { key } = splitId(id); return key === 'priv' || key.startsWith('m_'); };
 // personal fields never live in the shared settings doc (older app versions put them there)
-const PRIV_KEYS = ['profile', 'targets', 'weighIns', 'autoT', 'tnote', 'foods'];
+const PRIV_KEYS = ['profile', 'targets', 'weighIns', 'autoT', 'tnote', 'foods', 'waterGoal'];
 const isSettings = id => id !== 'profiles' && splitId(id).key === 'settings';
 const stripPriv = b => b && typeof b === 'object' ? Object.fromEntries(Object.entries(b).filter(([k]) => !PRIV_KEYS.includes(k))) : b;
 const privOf = b => b && typeof b === 'object' ? Object.fromEntries(Object.entries(b).filter(([k]) => PRIV_KEYS.includes(k))) : {};

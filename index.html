@@ -186,6 +186,16 @@ option{background:#141027;color:#fff}
 .recline{display:flex;gap:8px;align-items:baseline;font-size:13px;background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.28);border-radius:12px;padding:8px 10px;margin:8px 0}
 .fprow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.fprow .rowtxt{flex:1;min-width:0}.fprow .rowtxt small{display:block}.rkpick{margin:6px 0}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cdtypes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:4px 0 10px}.cdtype{display:flex;flex-direction:column;align-items:center;gap:2px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--txt,#fff);border-radius:12px;padding:8px 4px;font:600 12px inherit;font-family:inherit;line-height:1.15;text-align:center}.cdtype span{font-size:20px}.cdtype.on{background:var(--grad);border-color:transparent;color:#fff}
+.cdlist{display:flex;flex-direction:column;gap:2px;margin-top:6px}.cdrow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}.cdrow:last-child{border-bottom:0}.cdrow .rowtxt{flex:1;display:flex;flex-direction:column;min-width:0}.cdico{font-size:22px;width:30px;text-align:center;flex:none}.cdrow .kc{color:#f0abfc;font-weight:700}.cdrow .x.sure{width:auto;padding:0 8px;color:#fda4af}
+.cdcmp{display:flex;flex-direction:column;gap:9px;margin-top:6px}.cdbar .rktop span{font-size:13px}.cdbar.me .rktop span{font-weight:700}.cdbar.me .rkbar i{background:linear-gradient(90deg,#ec4899,#f0abfc)}
+.cdprev{margin:10px 0 2px;padding:10px 12px;border-radius:12px;background:rgba(168,85,247,.12);font-size:14px}.cdcard{background:linear-gradient(135deg,rgba(236,72,153,.18),rgba(139,92,246,.16))}
+.wgrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:6px 0}.wgdots{display:flex;gap:6px}.wgdot{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:700 12px inherit;font-family:inherit;color:var(--mut);background:rgba(255,255,255,.06);border:1px solid var(--line)}.wgdot.on{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 0 10px rgba(168,85,247,.45)}.wgdot.today{outline:2px solid #ec4899;outline-offset:2px}
+.wgnum{font-size:15px;color:var(--mut)}.wgnum b{font-size:28px;color:#fff}.wgstreak{font-weight:800;color:#f9a8d4;font-size:14px}.wgfoot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.wgset{display:flex;align-items:center;gap:6px}.lenbtn.sm{width:28px;height:28px;font-size:16px;border-radius:8px}
+.prtag{font-size:11px;font-weight:800;color:#fde68a;background:rgba(234,179,8,.15);border-radius:6px;padding:1px 6px;margin-left:4px}
+.wtrow{display:flex;align-items:center;justify-content:space-between;gap:10px}.wtbig{white-space:nowrap}.wtbig b{font-size:30px}.wtbig span{color:var(--mut);margin-left:4px}.wtcups{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:60%}.wtcups i{width:12px;height:18px;border-radius:2px 2px 5px 5px;border:1.5px solid rgba(96,165,250,.6)}.wtcups i.on{background:#60a5fa;border-color:#60a5fa}.wtcups i.half{background:linear-gradient(to top,#60a5fa 50%,transparent 50%)}
+.wtbar i{background:linear-gradient(90deg,#3b82f6,#a855f7)!important}.wtbtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.wtgoal{display:flex;align-items:center;gap:8px;margin-top:10px}.wtgoal input{width:80px;padding:6px 8px}
+.cdburn{margin-top:10px;padding:8px 10px;border-radius:10px;background:rgba(236,72,153,.1)}.wttrend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;margin:6px 0 10px}.wttrend .down{color:#86efac}.wttrend .upw{color:#f9a8d4}
 </style>
 </head>
 <body>
@@ -1081,6 +1091,46 @@ const EXERCISES = {
     demo: { view: 'side', base: { ua: 0, fa: 0 }, A: { hip: [100, 113], torso: 0, th: 180, sh: 180 }, B: { hip: [102, 110], torso: -10, th: 70, sh: 175 },
       props: [{ t: 'line', a: [70, 8], b: [140, 8], w: 4, c: C.machL }, { t: 'floor' }] }
   },
+  bb_hip_thrust: {
+    name: 'Barbell hip thrust', muscles: 'Glutes, hamstrings', inc: 5, bar: true,
+    setup: 'Upper back against a bench, feet flat about hip-width, padded barbell across your hip crease. Log total bar weight.',
+    cues: ['Tuck your chin and keep ribs down', 'Drive through your heels until your body is flat from shoulders to knees', 'Squeeze glutes hard for a second at the top, don’t arch your lower back'],
+    phases: ['Drive hips up', 'Squeeze', 'Lower slowly'],
+    demo: { view: 'side', base: { ankle: [140, 184], kneeDir: -1, elbowDir: 1, ft: 92 }, A: { hip: [92, 175], torso: -46, handRel: [32, 26] }, B: { hip: [105, 141], torso: -90, handRel: [46, -8] },
+      props: [{ t: 'floor' }, { t: 'rect', x: 14, y: 146, w: 46, h: 8, r: 4 }, { t: 'line', a: [24, 154], b: [24, 186], w: 4 }, { t: 'line', a: [50, 154], b: [50, 186], w: 4 }, { t: 'plateEnd', at: 'hip', o: [0, -9], front: true }] }
+  },
+  cable_kickback: {
+    name: 'Cable glute kickback', muscles: 'Glutes, hamstrings', inc: 5,
+    setup: 'Ankle strap on a low pulley. Face the machine, hold the frame, slight lean forward, standing knee soft.',
+    cues: ['Brace your abs so your back doesn’t arch', 'Kick the leg straight back by squeezing your glute', 'Return slowly, don’t let the stack touch down'],
+    phases: ['Kick back', 'Squeeze', 'Return slowly'],
+    demo: { view: 'side', base: { hip: [98, 101], torso: 22, ankle2: [100, 186], kneeDir2: -1, handRel: [34, 6], elbowDir: 1, _nc: true }, A: { th: 186, sh: 178 }, B: { th: 232, sh: 216 },
+      props: [{ t: 'floor' }, { t: 'stack', x: 166, y: 100 }, { t: 'cable', from: [158, 178], to: 'ankle', pulley: true }] }
+  },
+  db_back_ext: {
+    name: 'Dumbbell 45° back extension', muscles: 'Lower back, glutes, hamstrings', inc: 5, free: true,
+    setup: 'Pad just below your hip bones, heels under the rollers. Hug a dumbbell or plate to your chest.',
+    cues: ['Hinge at the hips, keep your back flat', 'Rise until your body is in a straight line, no further', 'Squeeze glutes at the top, lower slowly'],
+    phases: ['Rise', 'Squeeze', 'Lower slowly'],
+    demo: { view: 'side', base: { hip: [100, 128], ankle: [50, 180], kneeDir: 1, elbowDir: 1, ft: 200 }, A: { torso: 150, handRel: [-15, -8] }, B: { torso: 44, handRel: [-3, 16] },
+      props: [{ t: 'floor' }, { t: 'line', a: [44, 186], b: [120, 120], w: 4, c: C.machL }, { t: 'pad', at: [112, 140], r: 7 }, { t: 'pad', at: [48, 172], r: 5 }, { t: 'line', a: [112, 147], b: [112, 186], w: 4 }, { t: 'db', at: 'hand', ang: 90, front: true }] }
+  },
+  cable_pullover: {
+    name: 'Cable lat pullover (rope)', muscles: 'Lats', inc: 5,
+    setup: 'Rope on a high pulley. Step back, hinge forward about 30°, arms long overhead holding the rope.',
+    cues: ['Keep elbows only slightly bent the whole time', 'Pull the rope in an arc down to your hips with your lats', 'Let your arms rise back overhead slowly for a big stretch'],
+    phases: ['Pull down', 'Squeeze', 'Stretch back up'],
+    demo: { view: 'side', base: { hip: [82, 112], torso: 30, th: 184, sh: 176 }, A: { ua: 14, fa: 10 }, B: { ua: 178, fa: 172 },
+      props: [{ t: 'floor' }, { t: 'stack', x: 166, y: 100 }, { t: 'cable', from: [158, 14], to: 'hand', pulley: true }, { t: 'grip', at: 'hand', front: true }] }
+  },
+  decline_situp: {
+    name: 'Decline sit-up', muscles: 'Abs, hip flexors', inc: 0, bw: true,
+    setup: 'Hook your feet under the pads of a decline bench, knees bent. Arms crossed on your chest (hold a plate to make it harder). Log 0 lb or the plate weight.',
+    cues: ['Curl up one vertebra at a time, chin tucked', 'Come up until your chest faces your knees', 'Lower slowly all the way down, don’t drop'],
+    phases: ['Sit up', 'Squeeze', 'Lower slowly'],
+    demo: { view: 'side', base: { hip: [96, 140], ankle: [150, 112], kneeDir: 1, handRel: [6, 10], elbowDir: 1, ft: 30 }, A: { torso: -108 }, B: { torso: 18 },
+      props: [{ t: 'floor' }, { t: 'line', a: [20, 164], b: [150, 122], w: 7, c: C.machL }, { t: 'line', a: [60, 158], b: [60, 186], w: 4 }, { t: 'line', a: [140, 128], b: [140, 186], w: 4 }, { t: 'pad', at: [156, 110], r: 5 }, { t: 'pad', at: [152, 124], r: 5 }] }
+  },
 };
 
 // Animation: 0..1 progress with hold phases. Returns [t, phaseIndex]
@@ -1095,6 +1145,7 @@ function demoT(ms) {
 }
 
 const WORK = {
+  bb_hip_thrust: ['glutes', 'hams'], cable_kickback: ['glutes', 'hams'], db_back_ext: ['glutes', 'hams'], cable_pullover: ['lats'], decline_situp: ['abs'],
   chest_press: ['chest', 'delt', 'tri'], incline_press: ['chest', 'delt', 'tri'], shoulder_press: ['delt', 'tri'], pec_deck: ['chest'], lat_raise: ['delt'],
   tri_pushdown: ['tri'], tri_overhead: ['tri'], lat_pulldown: ['lats', 'bi'], seated_row: ['lats', 'upperback', 'bi'], chest_row: ['upperback', 'lats', 'delt'],
   rev_pec_deck: ['delt', 'upperback'], face_pull: ['delt', 'upperback'], curl_machine: ['bi'], cable_curl: ['bi', 'forearm'], leg_press: ['quads', 'glutes'],
@@ -1178,6 +1229,7 @@ const MM = {
   bb_bench: [['chest'], ['delts', 'triceps']], bb_squat: [['quads', 'glutes'], ['adductors', 'lowerback', 'hamstrings']], bb_deadlift: [['hamstrings', 'glutes', 'lowerback'], ['traps', 'lats', 'forearms', 'quads']],
   bb_row: [['midback', 'lats'], ['biceps', 'delts', 'lowerback']], bb_ohp: [['delts'], ['triceps', 'traps', 'abs']], bb_curl: [['biceps'], ['forearms']],
   cable_fly: [['chest'], ['delts']], straight_pd: [['lats'], ['triceps', 'abs']], cable_crunch: [['abs'], ['obliques']], assisted_pullup: [['lats'], ['biceps', 'midback']],
+  bb_hip_thrust: [['glutes'], ['hamstrings', 'adductors']], cable_kickback: [['glutes'], ['hamstrings']], db_back_ext: [['lowerback', 'glutes'], ['hamstrings']], cable_pullover: [['lats'], ['triceps', 'abs']], decline_situp: [['abs'], ['obliques']],
   machine_dip: [['triceps'], ['chest', 'delts']], back_ext: [['lowerback', 'glutes'], ['hamstrings']], pushup: [['chest'], ['triceps', 'delts', 'abs']], hanging_knee: [['abs'], ['obliques']],
 };
 const BACK_FIRST = new Set(['lats', 'midback', 'triceps', 'glutes', 'hamstrings', 'lowerback']);
@@ -1582,7 +1634,187 @@ Premier Protein shake|9.2|1.5|0.9|bottle:325| protein shake fast food restaurant
 Fairlife Core Power 26g|6.3|2.2|1.1|bottle:414| protein shake fast food restaurant
 Quest protein bar|35.0|36.7|13.3|bar:60| protein bar fast food restaurant
 Muscle Milk shake|6.0|2.2|1.1|bottle:414| protein shake fast food restaurant
-RXBAR|23.1|46.2|17.3|bar:52| protein bar fast food restaurant`;
+RXBAR|23.1|46.2|17.3|bar:52| protein bar fast food restaurant
+Chipotle Chips (regular)|6.2|64.6|22.1|bag:113;serving:113|tortilla chips side restaurant
+Chipotle Chips & guacamole|4|35.8|20.8|order:226;serving:226|chips and guac side restaurant
+Chipotle Chips & queso blanco|7.5|36.3|19|order:226;serving:226|chips and queso cheese dip side restaurant
+Chipotle Chips & tomato salsa|3.1|34.1|11.1|order:226;serving:226|chips and salsa side restaurant
+Chipotle Tomatillo green-chili salsa|0|7|0|serving:57|green salsa restaurant
+Chipotle Tomatillo red-chili salsa|1.8|7|0|serving:57|hot red salsa restaurant
+Chipotle Roasted chili-corn salsa|2.7|14.2|1.3|serving:113|corn salsa restaurant
+Chipotle Romaine lettuce|0|3.6|0|serving:28|lettuce restaurant
+Chipotle Supergreens salad mix|1.2|3.5|0|serving:85|salad lettuce restaurant
+Chipotle Honey vinaigrette|0|31.6|28.1|serving:57|salad dressing restaurant
+Chipotle Crispy corn tortilla (1 taco shell)|7.7|69.2|23.1|shell:13;serving:13|taco hard shell restaurant
+Chipotle Soft flour tortilla (1 taco)|8|52|10|tortilla:25;serving:25|taco restaurant
+Chipotle Chicken al pastor (4 oz)|20.4|3.5|9.7|serving:113|pastor restaurant
+Chipotle Chicken quesadilla|15.9|15.3|9.4|quesadilla:340;serving:340|cheese restaurant
+Chipotle Steak quesadilla|12.6|15.6|9.1|quesadilla:340;serving:340|cheese restaurant
+Chipotle Steak burrito (rice, pinto beans, fajitas, salsa, cheese, sour cream)|8.1|20.2|6.1|burrito:620;serving:620| restaurant
+Chipotle Carnitas bowl (brown rice, black beans, salsa, cheese, lettuce)|8.7|13.6|6|bowl:470;serving:470| restaurant
+Chipotle Barbacoa bowl (white rice, black beans, salsa, cheese, lettuce)|8.9|14.9|4.5|bowl:470;serving:470| restaurant
+Chipotle Sofritas bowl (white rice, black beans, fajitas, salsa, lettuce)|4.3|17.4|3.4|bowl:470;serving:470|vegan tofu restaurant
+Chipotle Chicken salad (supergreens, black beans, fajitas, salsa, cheese)|10.7|7.8|3.8|salad:450;serving:450|no dressing restaurant
+Chipotle Double chicken bowl (white rice, black beans, fajitas, salsa, cheese, lettuce)|13.4|11.8|4.5|bowl:620;serving:620|high protein double meat restaurant
+Chipotle Chicken tacos, 3 crispy (salsa, cheese, lettuce)|13.7|11|8.3|order:300;serving:300|hard shell restaurant
+Chipotle Kid's build your own (chicken, rice, beans, 2 tortillas)|8.8|20.8|5.2|meal:250;serving:250|kids meal restaurant
+Kabuli pulao with lamb|8|22.9|6.9|plate:350;serving:350|afghan rice palaw palau pilaf carrots raisins restaurant
+Kabuli pulao, rice only (no meat)|2.5|24|5|cup:200;serving:200|afghan rice palaw palau pilaf carrots raisins restaurant
+Chalaw (Afghan white rice)|2.5|28|3|cup:200;serving:200|challow afghan rice restaurant
+Mantu (beef dumplings with yogurt & sauce), 6 pc|10.4|17.6|8.8|plate:250;serving:250|manti afghan dumpling restaurant
+Ashak (leek dumplings with yogurt & meat sauce), 6 pc|8|20|7.2|plate:250;serving:250|aushak afghan dumpling restaurant
+Bolani with potato|4.7|30|10|piece:150;serving:150|bolanee afghan flatbread restaurant
+Bolani with leeks (gandana)|4|25.3|9.3|piece:150;serving:150|bolanee afghan flatbread restaurant
+Chapli kebab|16.7|6.7|18.3|patty:120;serving:120|chapali afghan kabob restaurant
+Lamb tikka kebab (1 skewer)|25.3|1.3|12|skewer:150;serving:150|afghan kabob kabab restaurant
+Chicken kebab, Afghan (1 skewer)|28|1.3|6|skewer:150;serving:150|afghan kabob kabab tikka restaurant
+Seekh kebab (1 skewer)|17|3|17|skewer:100;serving:100|kofta kabob kabab afghan lamb beef restaurant
+Shami kebab|12.9|11.4|12.9|piece:70;serving:70|kabob kabab afghan restaurant
+Lamb qorma|10.8|4.2|10.8|cup:240;serving:240|korma afghan stew restaurant
+Chicken qorma|11.7|4.2|7.5|cup:240;serving:240|korma afghan stew curry restaurant
+Qorma sabzi (spinach with lamb)|7.5|4.2|8.3|cup:240;serving:240|sabzi afghan restaurant
+Sabzi (Afghan spinach), no meat|2.5|4.2|5|cup:240;serving:240|afghan spinach restaurant
+Kofta curry, Afghan (meatballs)|10|4.2|9.2|cup:240;serving:240|kofta afghan meatball restaurant
+Daal, Afghan (yellow lentils)|5|12.5|2.5|cup:240;serving:240|dal lentil afghan restaurant
+Lubia (Afghan kidney bean stew)|5.4|14.6|2.9|cup:240;serving:240|lobia beans afghan restaurant
+Shorwa (Afghan lamb soup)|5.7|5.7|4|bowl:350;serving:350|shorba soup afghan restaurant
+Aush (Afghan noodle soup with yogurt & meat)|5.5|12.5|3.5|bowl:400;serving:400|ash soup afghan restaurant
+Naan-e Afghani (1/4 loaf)|9|52|3|piece:100;serving:100|afghan bread nan naan restaurant
+Borani banjan (eggplant with yogurt)|3|8|8|cup:200;serving:200|burani eggplant afghan restaurant
+Shor nakhod (chickpea & potato salad)|4.5|18.2|1.8|cup:220;serving:220|shornakhod afghan chickpeas restaurant
+Sambosa, Afghan (beef)|6.7|33.3|16.7|piece:60;serving:60|samosa afghan restaurant
+Pakora, Afghan vegetable (4 pc)|5|22.5|12.5|serving:80|pakoda afghan restaurant
+Shola (Afghan sticky rice)|4.2|20.8|3.3|cup:240;serving:240|sholeh afghan restaurant
+Firni (Afghan milk pudding)|3.3|20|3.3|bowl:150;serving:150|phirni afghan dessert restaurant
+Sheer khurma|4.2|22.9|6.2|cup:240;serving:240|sheer khorma afghan dessert eid restaurant
+Gosh-e fil (elephant ear pastry)|6.7|46.7|20|piece:30;serving:30|goash fil afghan dessert restaurant
+Jalebi (3 pieces)|1.7|60|15|serving:60|jelabi afghan dessert restaurant
+Doogh (Afghan yogurt drink)|2.5|3.3|1.2|cup:240;serving:240|dogh dugh afghan restaurant
+Afghan green chutney|1.7|6.7|0|serving:30|chatni afghan restaurant
+Afghan chai with milk & sugar|0.8|5.8|0.8|cup:240;serving:240|tea shir chai afghan restaurant
+Starbucks Pumpkin Spice Latte, grande 2%|3|11|3|drink:473;serving:473|psl fall holiday restaurant
+Starbucks Peppermint Mocha, grande 2% with whip|2.7|13.3|3.2|drink:473;serving:473|holiday christmas restaurant
+Cadbury Creme Egg|3.8|66.7|15.4|egg:39;serving:39|easter candy restaurant
+Peeps marshmallow chicks (5)|0|81|0|serving:42|easter candy restaurant
+Chocolate truffle (1)|4.6|53.8|34.6|piece:13;serving:13|valentine candy box restaurant
+Roast turkey, white meat with skin|29|0|7|oz:28;slice:28;serving:113|thanksgiving christmas holiday turkey breast
+Roast turkey, white meat no skin|30|0|2|oz:28;slice:28;serving:113|thanksgiving christmas holiday turkey breast
+Roast turkey, dark meat with skin|27|0|10|oz:28;slice:28;serving:113|thanksgiving christmas holiday turkey leg thigh
+Smoked turkey leg|28|0|9|leg:400;oz:28|thanksgiving fair holiday
+Stuffing / dressing, homemade|3|22|8.5|cup:200;serving:100|thanksgiving christmas holiday
+Stove Top stuffing, prepared|4|21|5|cup:150;serving:100|thanksgiving holiday
+Mashed potatoes with butter & milk|2|16|4.5|cup:210;serving:105|thanksgiving christmas holiday
+Turkey gravy|2|5|3|cup:240;tbsp:15;serving:60|thanksgiving christmas holiday
+Cranberry sauce, canned jellied|0.2|38|0.1|slice:70;cup:277;serving:70|thanksgiving christmas holiday
+Cranberry sauce, homemade whole berry|0.4|35|0.2|cup:277;serving:70|thanksgiving christmas holiday
+Sweet potato casserole with marshmallows|2|33|7|cup:200;serving:130|thanksgiving christmas holiday yams
+Candied yams|1|30|4|cup:200;serving:130|thanksgiving holiday sweet potato
+Green bean casserole|2|9|7|cup:160;serving:120|thanksgiving christmas holiday
+Corn casserole|5|26|12|cup:200;serving:120|thanksgiving holiday corn pudding
+Dinner roll, buttery|9|50|7|roll:35|thanksgiving christmas holiday bread parker house king's hawaiian
+King's Hawaiian sweet roll|9|55|6.5|roll:28|thanksgiving christmas holiday bread
+Cornbread|6.7|47|10|piece:65|thanksgiving holiday
+Baked mac and cheese|8|20|9|cup:200;serving:150|thanksgiving christmas holiday macaroni
+Deviled eggs|10|1|18|half:30|holiday easter party
+Roasted Brussels sprouts with bacon|5|9|8|cup:155|thanksgiving christmas holiday
+Glazed spiral ham|18|6|6|slice:85;serving:113;oz:28|christmas easter holiday honey baked
+Prime rib|23|0|28|slice:170;oz:28|christmas holiday beef roast
+Beef tenderloin roast|29|0|11|slice:113;oz:28|christmas holiday filet
+Leg of lamb, roasted|26|0|14|slice:85;serving:113;oz:28|easter christmas holiday eid
+Beef brisket, braised|28|2|14|serving:113;oz:28|hanukkah holiday
+Pork tamale|7|20|9|tamale:130|christmas holiday tamal
+Chicken tamale|8|20|7|tamale:130|christmas holiday tamal
+Pozole rojo|6|7|3.5|bowl:400;cup:240|christmas holiday posole
+Latkes (potato pancakes)|5|25|14|latke:50|hanukkah holiday
+Sufganiyah (jelly donut)|5|48|16|donut:85|hanukkah holiday
+Pumpkin pie|4.5|26.6|9.7|slice:120|thanksgiving christmas holiday dessert
+Pecan pie|4.5|60|22|slice:120|thanksgiving christmas holiday dessert
+Apple pie|2|34|12|slice:125|thanksgiving christmas holiday dessert
+Sweet potato pie|4|27|10|slice:120|thanksgiving christmas holiday dessert
+Cherry pie|2|38|11|slice:125|holiday dessert
+Pumpkin roll|5|45|15|slice:75|thanksgiving holiday dessert
+Whipped cream, canned|3|13|22|tbsp:4;serving:8|holiday dessert reddi wip
+Cool Whip|1|24|17|tbsp:4.5;serving:9|holiday dessert whipped topping
+Eggnog|4.5|13.5|4.2|cup:254;serving:127|christmas holiday egg nog
+Hot chocolate with milk|3.5|11|2.3|cup:250;mug:300|christmas holiday cocoa
+Apple cider|0|11.7|0|cup:248|thanksgiving holiday fall
+Sugar cookie, frosted|4|64|19|cookie:35|christmas holiday cookies
+Gingerbread cookie|5|72|11|cookie:30;man:60|christmas holiday cookies gingerbread man
+Snickerdoodle|5|66|20|cookie:25|christmas holiday cookies
+Peanut butter blossom cookie|9|55|26|cookie:22|christmas holiday cookies kiss
+Chocolate fudge|2.4|76|11|piece:30|christmas holiday candy
+Peppermint bark|5|62|30|piece:30|christmas holiday candy
+Candy cane|0|98|0|cane:14;mini:6|christmas holiday candy
+Fruitcake|3|62|9|slice:43|christmas holiday
+Yule log (buche de noel)|5|45|18|slice:100|christmas holiday cake
+Panettone|7|53|13|slice:80|christmas holiday bread
+Cinnamon roll with icing|5.5|55|14|roll:100|christmas holiday breakfast
+Monkey bread|5|52|15|serving:90|christmas holiday
+Hot cross bun|8|50|7|bun:75|easter holiday
+Pigs in a blanket|10|24|22|piece:20|christmas holiday party appetizer
+Spinach artichoke dip|5|6|18|tbsp:15;serving:60|holiday party appetizer
+Cheese ball|10|4|30|tbsp:14;serving:28|holiday party appetizer
+Brie cheese|21|0.5|28|oz:28;slice:28|holiday party charcuterie
+Ritz crackers|7|63|28|cracker:3.2;serving:16|holiday party
+Cocktail sauce|1.5|20|0.5|tbsp:17|shrimp cocktail holiday party
+Chex Mix, traditional|9|68|15|cup:50;serving:30|holiday party snack
+Candied pecans|6|40|48|oz:28;cup:110|christmas holiday nuts
+Potato salad|2.7|11|8|cup:250;serving:125|4th of july bbq cookout holiday
+Coleslaw|1|14|10|cup:190;serving:95|bbq cookout holiday
+Baked beans|5|21|2|cup:250;serving:125|bbq cookout holiday
+BBQ pork ribs|24|8|20|rib:60;serving:250|bbq cookout 4th of july
+Corn on the cob with butter|3.3|19|5|ear:100|bbq cookout 4th of july
+Buffalo chicken wings|24|1|16|wing:32|bar food
+Boneless chicken wings, sauced|15|18|12|piece:30|bar food
+Salmon nigiri|14|22|3|piece:35|sushi
+Spicy tuna roll|10|24|6|piece:28;roll:225|sushi
+Fried rice|5|30|6|cup:200|chinese
+Lo mein|6|26|5|cup:200|chinese noodles
+Pad thai with chicken|9|22|7|cup:200;plate:400|thai noodles
+Chicken tikka masala|12|6|9|cup:240|indian curry
+Butter chicken|13|6|11|cup:240|indian curry
+Naan|9|50|5|piece:90|indian bread
+Falafel|13|32|18|piece:17|middle eastern
+Chicken shawarma|22|3|10|serving:150|middle eastern gyro
+Gyro, lamb in pita|12|22|12|gyro:280|greek
+Pho with beef|6|10|1.5|bowl:600|vietnamese soup noodle
+Ramen, tonkotsu|6|11|5|bowl:600|japanese soup noodle
+Instant ramen, prepared|4|26|8|pack:250|noodles
+Spaghetti with meat sauce|8|20|5|cup:250|pasta bolognese
+Lasagna, meat|10|13|7|piece:250|pasta
+Chicken parmesan|16|10|9|serving:250|italian
+Chili with beans|8|11|4|cup:250|soup
+Chicken noodle soup|3|4|1.2|cup:240;bowl:400|soup
+Grilled cheese sandwich|11|30|17|sandwich:120|
+BLT sandwich|11|20|13|sandwich:150|
+Philly cheesesteak|13|17|9|sandwich:300|steak sandwich
+Breakfast burrito|11|20|10|burrito:250|egg sausage
+Quesadilla, chicken|15|22|12|quesadilla:200|mexican
+Nachos with cheese|8|32|19|plate:250|mexican
+Waffle|8|33|11|waffle:75|breakfast
+French toast|8|25|7|slice:65|breakfast
+Sausage link, pork|14|1|28|link:23|breakfast
+Turkey sausage link|16|2|9|link:23|breakfast
+Hash browns|3|35|15|cup:156|breakfast
+Overnight oats|6|20|4|cup:240|breakfast
+Acai bowl|2|22|4|bowl:400|smoothie
+Fruit smoothie|1|13|0.3|cup:240|drink
+Protein smoothie|6|10|2|cup:240;bottle:470|drink shake
+Trail mix|14|45|29|oz:28;cup:150|nuts snack
+Pretzels|10|80|3|oz:28|snack
+Beef stick (Slim Jim)|22|4|38|stick:28|jerky snack
+Cheese crackers (Cheez-It)|10|58|26|serving:30|snack cheezit
+Oreo cookies|4.5|69|20|cookie:11|cookie snack
+Pop-Tarts, frosted|4|70|10|pastry:50|breakfast snack
+Brownie|6|50|29|piece:56|dessert
+Cheesecake|6|26|22|slice:125|dessert
+Chocolate cake with frosting|4|50|18|slice:95|dessert birthday
+Glazed donut|5|51|22|donut:60|dessert breakfast doughnut
+Frozen yogurt|3.5|22|4|cup:175|dessert froyo
+Gatorade|0|6|0|bottle:591;cup:240|sports drink
+Energy drink (Red Bull)|0|11|0|can:250|drink
+Sweet tea|0|9|0|cup:240|drink
+Lemonade|0|10|0|cup:240|drink`;
 
 const FOODS = FOOD_RAW.split('\n').map(line => {
   const [name, p, c, f, units, alias] = line.split('|');
@@ -1613,7 +1845,7 @@ function searchFoods(q) {
     const score = (nm.startsWith(toks[0]) ? 0 : 2) + (nm.includes(toks.join(' ')) ? 0 : 1) + (nm.includes('raw') && !toks.includes('raw') ? 0.6 : 0) + nm.length / 100;
     out.push([score, i]);
   });
-  return out.sort((a, b) => a[0] - b[0]).slice(0, 8).map(x => x[1]);
+  return out.sort((a, b) => a[0] - b[0]).slice(0, toks.length === 1 ? 20 : 12).map(x => x[1]);
 }
 function unitGrams(food, unit) {
   if (BASE_UNITS[unit]) return BASE_UNITS[unit];
@@ -1707,7 +1939,7 @@ function defaultState(profile) {
   const t = calcTargets(profile);
   return {
     settings: { rv: 3, cycle: 0, profile, targets: { p: t.p, c: t.c, f: t.f }, splits: [defaultSplit()], activeSplit: 'default', sound: true, vibrate: true, foods: [], weighIns: {} },
-    active: null, sessions: {}, macros: {}, meta: {},
+    active: null, sessions: {}, macros: {}, cardio: {}, meta: {},
   };
 }
 function migrate(st) {
@@ -1725,7 +1957,7 @@ function getState(pid) {
   let st = null;
   try { st = JSON.parse(localStorage.getItem(lsKey(pid))); } catch (e) { }
   if (!st || !st.settings) st = defaultState();
-  st.meta = st.meta || {}; st.sessions = st.sessions || {}; st.macros = st.macros || {};
+  st.meta = st.meta || {}; st.sessions = st.sessions || {}; st.macros = st.macros || {}; st.cardio = st.cardio || {};
   if (migrate(st.settings)) st.meta.settings = Date.now();
   return (STATES[pid] = st);
 }
@@ -1746,7 +1978,7 @@ function saveWarn() { if (Sync.col || saveWarn.done) return; saveWarn.done = tru
 function saveLocal() { saveState(curPid()); }
 function saveProfiles() { try { localStorage.setItem(PROF_KEY, JSON.stringify(PROFILES)); } catch (e) { saveWarn(); } }
 // personal info lives in its own 'priv' doc (PIN-protected on the group server); everything else in settings stays shared
-const PRIV_KEYS = ['profile', 'targets', 'weighIns', 'autoT', 'tnote', 'foods'];
+const PRIV_KEYS = ['profile', 'targets', 'weighIns', 'autoT', 'tnote', 'foods', 'waterGoal'];
 const pick = (o, ks) => Object.fromEntries(ks.filter(k => o[k] !== undefined).map(k => [k, o[k]]));
 function docBody(st, key) {
   if (key === 'settings') return Object.fromEntries(Object.entries(st.settings).filter(([k]) => !PRIV_KEYS.includes(k)));
@@ -1755,6 +1987,7 @@ function docBody(st, key) {
   if (key === 'active') return st.active ? { session: st.active } : { session: null };
   if (key.startsWith('w_')) return st.sessions[key.slice(2)] || null;
   if (key.startsWith('m_')) return st.macros[key.slice(2)] || null;
+  if (key.startsWith('k_')) return (st.cardio || {})[key.slice(2)] || null;
 }
 function touch(key, pid = curPid()) {
   const st = getState(pid), now = Date.now();
@@ -1801,7 +2034,7 @@ async function pushDoc(full) {
   if (Sync.again[full]) { Sync.again[full] = false; pushDoc(full); }
 }
 function setSync(s) { Sync.status = s; const el = $('#syncdot'); if (el) { el.className = 'syncdot ' + s; el.title = s === 'account' ? 'Saved to your Claude account' : s === 'group' ? 'Shared with your group' : 'Saved on this device'; } }
-function stateKeys(st) { return ['settings', 'priv', 'pub', 'active', ...Object.keys(st.sessions).map(k => 'w_' + k), ...Object.keys(st.macros).map(k => 'm_' + k)]; }
+function stateKeys(st) { return ['settings', 'priv', 'pub', 'active', ...Object.keys(st.sessions).map(k => 'w_' + k), ...Object.keys(st.macros).map(k => 'm_' + k), ...Object.keys(st.cardio || {}).map(k => 'k_' + k)]; }
 // ---------- per-person PIN (group server only) ----------
 const PINTOK = (() => { try { return JSON.parse(sessionStorage.getItem('gymapp.tok') || '{}') || {}; } catch (e) { return {}; } })();
 function saveTok() { try { sessionStorage.setItem('gymapp.tok', JSON.stringify(PINTOK)); } catch (e) { } }
@@ -1915,6 +2148,7 @@ function applyDoc(st, key, body) {
   else if (key === 'active') st.active = body ? body.session : null;
   else if (key.startsWith('w_')) { if (body) st.sessions[key.slice(2)] = body; }
   else if (key.startsWith('m_')) { if (body) st.macros[key.slice(2)] = body; }
+  else if (key.startsWith('k_')) { if (body) (st.cardio = st.cardio || {})[key.slice(2)] = body; }
 }
 
 // ---------- Audio / haptics ----------
@@ -2014,6 +2248,7 @@ function logSet() {
   e.sets.push({ w, r: reps, t: Date.now() });
   a.lastTs = Date.now();
   buzz(30);
+  try { checkPR(a, e); } catch (er) { }
   const doneEx = e.sets.length >= e.target.sets;
   const lastEx = a.i >= a.ex.length - 1;
   if (doneEx && lastEx && a.ex.every(x => x.sets.length >= x.target.sets || x.skipped)) { a.restEnd = null; UI.sheet = 'finish'; }
@@ -2035,7 +2270,7 @@ function finishWorkout() {
   if (a.ex.length) { S.sessions[a.id] = a; touch('w_' + a.id); }
   if (a.dayIdx != null && a.dayIdx >= 0) { S.settings.cycle = (a.dayIdx + 1) % routine().length; touch('settings'); }
   S.active = null; touch('active'); UI.sheet = null; keepAwake(false);
-  toast(a.ex.length ? 'Workout saved. Nice work!' : 'Workout ended (nothing logged)');
+  toast(a.ex.length ? `Workout saved. Nice work!${a.prs ? ` 🏆 ${a.prs} PR${a.prs === 1 ? '' : 's'} today` : ''}` : 'Workout ended (nothing logged)');
   render(); window.scrollTo(0, 0);
 }
 function discardWorkout() { S.active = null; touch('active'); UI.sheet = null; keepAwake(false); render(); }
@@ -2150,6 +2385,7 @@ const RK_METRICS = [
   ['workouts', 'Workouts', 'workouts done'], ['sets', 'Sets', 'sets logged'], ['volume', 'Volume', 'lb lifted (weight × reps)'],
   ['days', 'Gym days', 'different days trained'], ['total', 'Big 3 total', 'best bench + squat + deadlift (estimated 1RM)'], ['ratio', 'Strength vs BW %', 'Big 3 total as a % of body weight, fair across sizes'],
   ['lift', 'Any exercise', 'estimated 1-rep max on one exercise'], ['strength', 'Strength gain', 'average strength gain on repeated exercises'],
+  ['streak', 'Streak', 'weeks in a row hitting their weekly goal'], ['cardio', 'Cardio minutes', 'minutes of cardio logged'], ['miles', 'Cardio miles', 'miles walked, run or biked'],
   ['weight', 'Weight goal', 'body weight moved toward their goal'], ['protein', 'Protein', 'days protein target was hit'],
 ];
 function rkStats(pid, days, stIn, raw) {
@@ -2177,7 +2413,8 @@ function rkStats(pid, days, stIn, raw) {
   if (tp) for (const [k, d] of Object.entries(st.macros || {})) { if (k < sinceKey || !d || !d.entries) continue; const p = d.entries.reduce((x, e) => x + (+e.p || 0), 0); if (p >= tp * 0.9) protein++; }
   const sg = strengthOf(st, 0); // strength is each person's best ever, whatever the period
   const lb = exBest(st, (UI.rk && UI.rk.l) || 'bb_bench'); const lift = lb ? lb.v : null;
-  const res = { workouts: ss.length, sets, volume: Math.round(volume), days: dset.size, strength, weight, wDelta, protein, total: sg.total, ratio: sg.ratio, lift, liftBw: lift && sg.bw ? lift / sg.bw : null };
+  const cs = cardioStats(st, days ? sinceKey : '');
+  const res = { streak: streakOf(st).streak, cardio: cs.min, miles: cs.mi ? Math.round(cs.mi * 10) / 10 : 0, workouts: ss.length, sets, volume: Math.round(volume), days: dset.size, strength, weight, wDelta, protein, total: sg.total, ratio: sg.ratio, lift, liftBw: lift && sg.bw ? lift / sg.bw : null };
   // other people's personal numbers come from their shared summary, never from their private data
   if (!raw && GROUP.on && pid && pid !== curPid() && !(st.meta.priv > 0 && !locked(pid))) {
     const pb = st.pub, pk = (RK_PERIODS.find(x => x[2] === days) || RK_PERIODS[2])[0], pp = pb && pb.p && pb.p[pk];
@@ -2195,6 +2432,9 @@ function rkFmt(m, s) {
   if (m === 'weight') return (v >= 0 ? '+' : '') + v.toFixed(1) + '%' + (s.wDelta != null ? ` <small class="muted">(${s.wDelta > 0 ? '+' : ''}${s.wDelta.toFixed(1)} lb)</small>` : '');
   if (m === 'protein') return v + (v === 1 ? ' day' : ' days');
   if (m === 'total') return v.toLocaleString() + ' lb';
+  if (m === 'cardio') return v + ' min';
+  if (m === 'streak') return v + (v === 1 ? ' week' : ' weeks');
+  if (m === 'miles') return v + ' mi';
   if (m === 'ratio') return Math.round(v * 100) + '%';
   if (m === 'lift') return v + ' lb' + (s.liftBw && s.self ? ` <small class="muted">(${Math.round(s.liftBw * 100)}% of BW)</small>` : '');
   return String(v);
@@ -2222,7 +2462,7 @@ function viewRanking() {
     <div class="chips rkchips">${RK_METRICS.map(([k, l]) => `<button class="pchip ${k === met[0] ? 'on' : ''}" data-act="rk-m" data-v="${k}">${l}</button>`).join('')}</div>
     ${met[0] === 'lift' ? `<label class="rkpick">Exercise<select data-act="rk-ex">${rkExOptions()}</select></label><div class="segs liftseg">${LIFTS.map(([k, l]) => `<button class="${k === (UI.rk.l || 'bb_bench') ? 'on' : ''}" data-act="rk-l" data-v="${k}">${{ bb_bench: 'Bench', bb_squat: 'Squat', bb_deadlift: 'Deadlift', bb_ohp: 'OHP', bb_row: 'Row' }[k]}</button>`).join('')}</div>` : ''}
     <p class="small muted rkdesc">${['total', 'ratio', 'lift'].includes(met[0]) ? 'Uses each person’s best ever. ' : ''}Ranked by ${met[2]}${met[0] === 'lift' ? ` (${esc((EXERCISES[UI.rk.l || 'bb_bench'] || { name: '' }).name.toLowerCase())})` : ''}.</p>`;
-  if (!ranked.length) h += `<p class="muted">No one has ${met[0] === 'weight' ? 'logged their weight' : met[0] === 'protein' ? 'hit their protein target' : ['total', 'ratio', 'lift'].includes(met[0]) ? 'logged this lift (Progress → Strength → Log a max)' : 'logged a workout'} ${per[0] === 'all' ? 'yet' : 'in this period'}.</p>`;
+  if (!ranked.length) h += `<p class="muted">No one has ${met[0] === 'weight' ? 'logged their weight' : met[0] === 'protein' ? 'hit their protein target' : ['cardio', 'miles'].includes(met[0]) ? 'logged cardio' : ['total', 'ratio', 'lift'].includes(met[0]) ? 'logged this lift (Progress → Strength → Log a max)' : 'logged a workout'} ${per[0] === 'all' ? 'yet' : 'in this period'}.</p>`;
   h += `<div class="rklist">${ranked.map((r, i) => { const v = r.s[met[0]], w = Math.max(4, Math.abs(v) / top * 100);
     return `<div class="rkrow ${r.p.id === curPid() ? 'me' : ''} ${i === 0 ? 'lead' : ''}"><span class="rkmed">${medal(i)}</span><span class="avatar sm">${esc((r.p.name || '?')[0].toUpperCase())}</span><div class="rkmain"><div class="rktop"><b>${esc(r.p.name)}</b><span class="rkval">${rkFmt(met[0], r.s)}</span></div><div class="rkbar"><i style="width:${w.toFixed(1)}%" class="${v < 0 ? 'neg' : ''}"></i></div></div></div>`; }).join('')}
     ${rest.map(r => `<div class="rkrow dim"><span class="rkmed">–</span><span class="avatar sm">${esc((r.p.name || '?')[0].toUpperCase())}</span><div class="rkmain"><div class="rktop"><b>${esc(r.p.name)}</b><span class="rkval muted">no data</span></div></div></div>`).join('')}</div></div>`;
@@ -2233,6 +2473,178 @@ function viewRanking() {
     </tbody></table></div>
     ${GROUP.on ? '<p class="small muted">Everyone who opens this link shares one group. New people show up here as soon as they add themselves.</p>' : '<p class="small muted">Shows the people on this device. Open the group link to compare with everyone.</p>'}</div>`;
   return h;
+}
+
+// ---------- Cardio: logged entries are shared (minutes, distance, speed, incline); calories are worked out only on your own phone from your own weight ----------
+// kind: 'walk'/'run' use the ACSM walking/running equations (speed + grade); 'met' types use a MET value × effort
+const CARDIO = [
+  ['walk', 'Outdoor walk', '🚶', { k: 'walk', mph: 3.0 }], ['twalk', 'Treadmill walk', '🚶‍♂️', { k: 'walk', mph: 3.2, inc: 0, tm: true }],
+  ['incline', 'Incline treadmill', '⛰️', { k: 'walk', mph: 3.0, inc: 12, tm: true }], ['hike', 'Hike', '🥾', { k: 'walk', mph: 2.5, inc: 6 }],
+  ['run', 'Outdoor run', '🏃', { k: 'run', mph: 6.0 }], ['trun', 'Treadmill run', '🏃‍♂️', { k: 'run', mph: 6.0, inc: 1, tm: true }],
+  ['bike', 'Outdoor bike', '🚴', { k: 'met', met: [4.0, 6.8, 10], dist: true }], ['sbike', 'Stationary bike', '🚲', { k: 'met', met: [3.5, 6.8, 8.8] }],
+  ['ellip', 'Elliptical', '🌀', { k: 'met', met: [4.6, 5.0, 6.5] }], ['stairs', 'Stair climber', '🪜', { k: 'met', met: [6.0, 9.0, 11] }],
+  ['row', 'Rowing machine', '🚣', { k: 'met', met: [4.8, 7.0, 8.5] }], ['swim', 'Swimming', '🏊', { k: 'met', met: [5.8, 7.0, 9.8] }],
+  ['hiit', 'HIIT / circuit', '🔥', { k: 'met', met: [6.0, 8.0, 10] }], ['other', 'Other', '❤️', { k: 'met', met: [3.5, 5.0, 7.0] }],
+];
+const CARDIO_BY = Object.fromEntries(CARDIO.map(c => [c[0], c]));
+const EFFORTS = ['Easy', 'Moderate', 'Hard'];
+const cardioList = st => Object.values((st || S).cardio || {}).filter(c => c && !c.del && c.min > 0).sort((a, b) => (b.d || '').localeCompare(a.d || '') || (b.at || 0) - (a.at || 0));
+// speed in mph: what they entered, else from distance ÷ time, else the type's typical pace
+function cardioMph(c) { const ty = (CARDIO_BY[c.t] || CARDIO_BY.other)[3]; return +c.mph > 0 ? +c.mph : +c.mi > 0 && c.min > 0 ? +c.mi / (c.min / 60) : ty.mph || 0; }
+function cardioMiles(c) { const ty = (CARDIO_BY[c.t] || CARDIO_BY.other)[3]; if (+c.mi > 0) return +c.mi; if (ty.k !== 'met' && +c.mph > 0) return +c.mph * c.min / 60; return 0; }
+// kcal for one entry at a body weight (lb). Gross calories, like a treadmill or watch shows.
+function cardioKcal(c, lb) {
+  if (!(lb > 0) || !(c.min > 0)) return 0;
+  const ty = (CARDIO_BY[c.t] || CARDIO_BY.other)[3], kg = lb * 0.4536;
+  if (ty.k === 'met') return Math.round(ty.met[c.eff == null ? 1 : c.eff] * 3.5 * kg / 200 * c.min);
+  const v = cardioMph(c) * 26.82, g = Math.max(0, (c.inc != null && c.inc !== '' ? +c.inc : ty.inc || 0)) / 100;
+  // a fast walk (over ~4.5 mph) counts as running; a slow "run" counts as walking
+  const run = ty.k === 'run' ? v > 80 : v > 121;
+  const vo2 = run ? 3.5 + 0.2 * v + 0.9 * v * g : 3.5 + 0.1 * v + 1.8 * v * g;
+  return Math.round(vo2 * kg / 1000 * 5 * c.min);
+}
+const myLb = () => +((S.settings.profile || {}).weightLb) || 0;
+function cardioDesc(c) {
+  const ty = (CARDIO_BY[c.t] || CARDIO_BY.other)[3], bits = [c.min + ' min'];
+  if (+c.mi > 0) bits.push((+c.mi).toFixed(2).replace(/\.?0+$/, '') + ' mi');
+  if (ty.k !== 'met') { const s = cardioMph(c); if (s) bits.push(s.toFixed(1) + ' mph'); const p = s ? 60 / s : 0; if (ty.k === 'run' && p) bits.push(Math.floor(p) + ':' + String(Math.round(p % 1 * 60)).padStart(2, '0') + ' /mi'); if (ty.tm || +c.inc > 0) bits.push((+c.inc || 0) + '% incline'); }
+  else bits.push(EFFORTS[c.eff == null ? 1 : c.eff].toLowerCase());
+  if (+c.hr > 0) bits.push(c.hr + ' bpm');
+  return bits.join(' · ');
+}
+function cardioStats(st, since) {
+  const L = cardioList(st).filter(c => !since || (c.d || '') >= since);
+  return { n: L.length, min: L.reduce((t, c) => t + (+c.min || 0), 0), mi: L.reduce((t, c) => t + cardioMiles(c), 0), L };
+}
+function cardioCard(full) {
+  const wk = cardioStats(S, dateKey(new Date(Date.now() - 6 * 864e5))), lb = myLb();
+  const kcalWk = wk.L.reduce((t, c) => t + cardioKcal(c, lb), 0);
+  let h = `<div class="card"><div class="phead"><h3>Cardio</h3><button class="btn small ghost" data-act="cardio-new">+ Log cardio</button></div>
+    <div class="stats strstats"><div><b>${wk.min}</b><small>minutes, last 7 days</small></div><div><b>${wk.mi ? wk.mi.toFixed(1) : '—'}</b><small>miles</small></div><div><b>${kcalWk ? kcalWk.toLocaleString() : '—'}</b><small>calories burned</small></div></div>`;
+  if (!full) return h + '</div>';
+  const all = cardioList(S);
+  h += all.length ? `<div class="cdlist">${all.slice(0, UI.cdAll ? 200 : 6).map(c => { const ty = CARDIO_BY[c.t] || CARDIO_BY.other;
+    return `<div class="cdrow"><span class="cdico">${ty[2]}</span><span class="rowtxt"><b>${esc(ty[1])} · ${fmtDate(parseKey(c.d), { weekday: 'short', month: 'short', day: 'numeric' })}</b><small class="muted">${esc(cardioDesc(c))}${lb ? ` · <span class="kc">${cardioKcal(c, lb)} kcal</span>` : ''}</small>${c.note ? `<small class="muted">${esc(c.note)}</small>` : ''}</span><button class="x ${UI.confirm === 'cd:' + c.id ? 'sure' : ''}" data-act="cardio-del" data-id="${esc(c.id)}" aria-label="Delete">${UI.confirm === 'cd:' + c.id ? 'Delete?' : '✕'}</button></div>`; }).join('')}</div>
+    ${all.length > 6 ? `<button class="linkbtn" data-act="cardio-all">${UI.cdAll ? 'Show less' : `Show all ${all.length}`}</button>` : ''}` : '<div class="empty">Log a walk, run, bike ride or any cardio and it shows up here.</div>';
+  return h + '</div>' + cardioCompare();
+}
+// compare types: 30 minutes of each at your weight, plus your own average per type
+function cardioCompare() {
+  const lb = myLb(); if (!lb) return '';
+  const ref = [['walk', 'Outdoor walk, 3 mph', { t: 'walk', mph: 3 }], ['twalk', 'Treadmill walk, 3.5 mph', { t: 'twalk', mph: 3.5, inc: 0 }], ['incline', 'Incline treadmill, 3 mph at 12%', { t: 'incline', mph: 3, inc: 12 }], ['incline', 'Incline treadmill, 3.5 mph at 15%', { t: 'incline', mph: 3.5, inc: 15 }],
+    ['run', 'Outdoor run, 6 mph (10:00/mi)', { t: 'run', mph: 6 }], ['trun', 'Treadmill run, 6 mph at 1%', { t: 'trun', mph: 6, inc: 1 }], ['sbike', 'Stationary bike, moderate', { t: 'sbike', eff: 1 }], ['ellip', 'Elliptical, moderate', { t: 'ellip', eff: 1 }], ['stairs', 'Stair climber, moderate', { t: 'stairs', eff: 1 }], ['row', 'Rowing machine, moderate', { t: 'row', eff: 1 }]]
+    .map(([t, l, c]) => ({ t, l, k: cardioKcal({ ...c, min: 30 }, lb) }));
+  const mine = {}; for (const c of cardioList(S)) { const m = mine[c.t] = mine[c.t] || { k: 0, min: 0, n: 0 }; m.k += cardioKcal(c, lb); m.min += +c.min; m.n++; }
+  const you = Object.entries(mine).map(([t, m]) => ({ t, l: 'Your ' + (CARDIO_BY[t] || CARDIO_BY.other)[1].toLowerCase() + ` <small class="muted">(avg of ${m.n})</small>`, k: Math.round(m.k / m.min * 30), me: true }));
+  const rows = [...you, ...ref].sort((a, b) => b.k - a.k), top = Math.max(...rows.map(r => r.k), 1);
+  return `<div class="card"><div class="phead"><h3>Compare cardio</h3><span class="small muted">calories in 30 min at your weight</span></div>
+    <div class="cdcmp">${rows.map(r => `<div class="cdbar ${r.me ? 'me' : ''}"><div class="rktop"><span>${(CARDIO_BY[r.t] || CARDIO_BY.other)[2]} ${r.me ? r.l : esc(r.l)}</span><b>${r.k}</b></div><div class="rkbar"><i style="width:${Math.max(4, r.k / top * 100).toFixed(1)}%"></i></div></div>`).join('')}</div>
+    <p class="small muted">Walking and running use the ACSM equations (speed + incline); other types use standard MET values. Watches and machines vary, so treat these as estimates. Calories use your private weight and are only shown to you.</p></div>`;
+}
+function viewCardioSheet() {
+  const f = UI.cd || (UI.cd = { t: 'walk', d: dateKey(), eff: 1 }), ty = CARDIO_BY[f.t] || CARDIO_BY.other, k = ty[3];
+  const preview = cardioKcal({ ...f, min: num(f.min), mi: num(f.mi), mph: num(f.mph), inc: f.inc === '' || f.inc == null ? undefined : num(f.inc) }, myLb());
+  const inp = (id, label, v, ph, extra = '') => `<label>${label}<input id="cd-${id}" data-cd="${id}" type="number" inputmode="decimal" value="${v == null ? '' : esc(String(v))}" placeholder="${ph}" ${extra}></label>`;
+  return `<div class="panel"><div class="phead"><h3>Log cardio</h3><button class="x" data-act="close">✕</button></div>
+    <div class="cdtypes">${CARDIO.map(([id, l, ic]) => `<button class="cdtype ${id === f.t ? 'on' : ''}" data-act="cardio-type" data-t="${id}"><span>${ic}</span>${l}</button>`).join('')}</div>
+    <div class="row2">${inp('min', 'Minutes', f.min, '30')}<label>Date<input id="cd-d" data-cd="d" type="date" value="${esc(f.d || dateKey())}" max="${dateKey()}"></label></div>
+    ${k.k !== 'met' ? `<div class="row2">${inp('mi', 'Distance (mi)', f.mi, 'optional', 'step="0.01"')}${inp('mph', 'Speed (mph)', f.mph, k.mph.toFixed(1), 'step="0.1"')}</div>
+      <div class="row2">${inp('inc', k.tm ? 'Incline (%)' : 'Hills / grade (%)', f.inc, String(k.inc || 0), 'step="0.5"')}${inp('hr', 'Avg heart rate', f.hr, 'optional')}</div>`
+    : `<div class="segs">${EFFORTS.map((e, i) => `<button class="${(f.eff == null ? 1 : f.eff) === i ? 'on' : ''}" data-act="cardio-eff" data-i="${i}">${e}</button>`).join('')}</div>
+      <div class="row2">${ty[3].dist ? inp('mi', 'Distance (mi)', f.mi, 'optional', 'step="0.1"') : ''}${inp('hr', 'Avg heart rate', f.hr, 'optional')}</div>`}
+    <label>Note<input id="cd-note" data-cd="note" value="${esc(f.note || '')}" placeholder="optional" maxlength="80"></label>
+    <div class="cdprev" id="cd-prev">${cdPrevText(preview)}</div>
+    <div class="formerr" id="cd-err"></div>
+    <button class="btn primary big" data-act="cardio-save">Save cardio</button></div>`;
+}
+function cdPrevText(k) { return k ? `About <b>${k}</b> calories burned <small class="muted">(only you see this)</small>` : '<span class="muted">Enter minutes to see calories burned.</span>'; }
+function cardioSave() {
+  const f = UI.cd, min = Math.round(num(f.min)), er = $('#cd-err');
+  if (!(min >= 1 && min <= 600)) { er.textContent = 'Enter how many minutes (1 to 600).'; return; }
+  const k = (CARDIO_BY[f.t] || CARDIO_BY.other)[3];
+  const c = { id: uid(), t: f.t, d: f.d && f.d <= dateKey() ? f.d : dateKey(), at: Date.now(), min };
+  const mi = num(f.mi), mph = num(f.mph), hr = Math.round(num(f.hr));
+  if (mi > 0 && mi < 200) c.mi = Math.round(mi * 100) / 100;
+  if (k.k !== 'met') { if (mph > 0 && mph < 30) c.mph = Math.round(mph * 10) / 10; else if (!c.mi) c.mph = k.mph; if (f.inc !== '' && f.inc != null) c.inc = Math.max(-5, Math.min(40, num(f.inc))); else if (k.inc) c.inc = k.inc; }
+  else c.eff = f.eff == null ? 1 : f.eff;
+  if (hr > 30 && hr < 230) c.hr = hr;
+  if (f.note) c.note = String(f.note).slice(0, 80);
+  S.cardio = S.cardio || {}; S.cardio[c.id] = c; touch('k_' + c.id);
+  UI.cd = { t: f.t, d: dateKey(), eff: f.eff }; UI.sheet = null; render();
+  const kc = cardioKcal(c, myLb()); toast(`${(CARDIO_BY[c.t] || CARDIO_BY.other)[1]} saved${kc ? ` · about ${kc} kcal` : ''}`);
+}
+
+// ---------- Weekly goal + streak (counts days with a workout or 20+ min of cardio, Monday to Sunday) ----------
+function weekMon(d = new Date()) { const x = new Date(d); x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; }
+function activeDays(st) {
+  const s = new Set();
+  for (const w of Object.values(st.sessions || {})) if (w && w.start && Array.isArray(w.ex) && w.ex.length) s.add(dateKey(new Date(w.start)));
+  for (const c of cardioList(st)) if (+c.min >= 20 && c.d) s.add(c.d);
+  return s;
+}
+function weekCount(days, mon) { let n = 0; for (let i = 0; i < 7; i++) { const d = new Date(mon); d.setDate(d.getDate() + i); if (days.has(dateKey(d))) n++; } return n; }
+function streakOf(st) {
+  const goal = Math.max(1, Math.min(7, +(st.settings || {}).weekGoal || 4)), days = activeDays(st), mon = weekMon();
+  const cur = weekCount(days, mon); let n = cur >= goal ? 1 : 0;
+  for (let i = 1; i < 520; i++) { const m = new Date(mon); m.setDate(m.getDate() - 7 * i); if (weekCount(days, m) >= goal) n++; else break; }
+  return { goal, cur, streak: n, days, mon };
+}
+function goalWeekCard() {
+  const g = streakOf(S), td = dateKey();
+  const dots = WEEKDAYS.map((w, i) => { const d = new Date(g.mon); d.setDate(d.getDate() + i); const k = dateKey(d); return `<span class="wgdot ${g.days.has(k) ? 'on' : ''} ${k === td ? 'today' : ''}">${w[0]}</span>`; }).join('');
+  const left = g.goal - g.cur;
+  return `<div class="card wgcard"><div class="phead"><h3>This week</h3><span class="wgstreak">${g.streak ? `🔥 ${g.streak} week${g.streak === 1 ? '' : 's'} streak` : '<span class="muted small">Hit your goal to start a streak</span>'}</span></div>
+    <div class="wgrow"><div class="wgdots">${dots}</div><div class="wgnum"><b>${g.cur}</b>/<span>${g.goal}</span></div></div>
+    <div class="wgfoot"><small class="muted">${left > 0 ? `${left} more active day${left === 1 ? '' : 's'} to hit your goal` : 'Goal hit this week. Nice!'} · workouts or 20+ min cardio</small>
+    <span class="wgset"><button class="lenbtn sm" data-act="wgoal" data-d="-1" aria-label="Lower goal">−</button><small>goal ${g.goal}/wk</small><button class="lenbtn sm" data-act="wgoal" data-d="1" aria-label="Raise goal">+</button></span></div></div>`;
+}
+
+// ---------- Personal records ----------
+function setE1(z) { return +z.r === 1 ? +z.w || 0 : e1rm(+z.w || 0, Math.min(+z.r || 0, 12)); }
+// best before this set: saved workouts, logged maxes, and earlier sets in this workout
+function prBefore(id, a, e) {
+  const b = exBest(S, id); let best = b ? b.v : 0, topW = 0;
+  for (const s of Object.values(S.sessions || {})) for (const x of (s.ex || [])) if (x.id === id) for (const z of (x.sets || [])) topW = Math.max(topW, +z.w || 0);
+  for (const x of a.ex) if (x.id === id) for (const z of x.sets) if (z !== e.sets[e.sets.length - 1]) { best = Math.max(best, Math.round(setE1(z))); topW = Math.max(topW, +z.w || 0); }
+  return { best, topW, any: !!b || a.ex.some(x => x.id === id && x.sets.length > 1) };
+}
+function checkPR(a, e) {
+  const z = e.sets[e.sets.length - 1]; if (!z || !(+z.w > 0)) return;
+  const pb = prBefore(e.id, a, e); if (!pb.any) return;
+  const v = Math.round(setE1(z)), name = (EXERCISES[e.id] || { name: e.id }).name;
+  let msg = null;
+  if (v > pb.best) { z.pr = 1; msg = `🏆 New PR on ${name}! Est. 1RM ${v} lb (was ${pb.best})`; }
+  else if (+z.w > pb.topW) { z.pr = 1; msg = `🏆 Heaviest ${name} yet: ${z.w} lb`; }
+  if (!msg) return;
+  const L = exLeaders(e.id), top = L[0];
+  if (GROUP.on && L.length > 1 && v > (top.p.id === curPid() ? (L[1] ? L[1].b.v : 0) : top.b.v)) msg += ' · best in the group!';
+  a.prs = (a.prs || 0) + 1;
+  setTimeout(() => { toast(msg); beep(660, 0.12); beep(880, 0.12, 0.14); beep(1175, 0.2, 0.28); buzz([40, 60, 40, 60, 120]); }, 60);
+}
+
+// ---------- Water (saved with the day's food log, so it stays private) ----------
+const waterGoal = () => +S.settings.waterGoal || Math.max(64, Math.min(150, Math.round((myLb() || 160) / 2 / 8) * 8));
+function waterCard(k) {
+  const oz = +((S.macros[k] || {}).water) || 0, g = waterGoal(), pct = Math.min(100, oz / g * 100);
+  const cups = Math.ceil(g / 8);
+  return `<div class="card watercard"><div class="phead"><h3>💧 Water</h3><span class="small muted">${oz >= g ? 'Goal hit!' : `${g - oz} oz to go`}</span></div>
+    <div class="wtrow"><div class="wtbig"><b>${oz}</b><span>/ ${g} oz</span></div><div class="wtcups">${Array.from({ length: Math.min(cups, 20) }, (_, i) => `<i class="${(i + 1) * 8 <= oz ? 'on' : (i * 8 < oz ? 'half' : '')}"></i>`).join('')}</div></div>
+    <div class="rkbar wtbar"><i style="width:${pct.toFixed(1)}%"></i></div>
+    <div class="wtbtns"><button class="pchip" data-act="water" data-oz="8">+ 8 oz cup</button><button class="pchip" data-act="water" data-oz="16.9">+ bottle</button><button class="pchip" data-act="water" data-oz="32">+ 32 oz</button><button class="pchip" data-act="water" data-oz="-8" ${oz <= 0 ? 'disabled' : ''}>− 8</button></div>
+    <div class="wtgoal"><small class="muted">Daily goal</small><input type="number" inputmode="numeric" data-act="wgoal-in" value="${g}" aria-label="Daily water goal in ounces"><small class="muted">oz</small></div></div>`;
+}
+function cardioBurnLine(k) {
+  const L = cardioList(S).filter(c => c.d === k); if (!L.length) return '';
+  const kc = L.reduce((t, c) => t + cardioKcal(c, myLb()), 0);
+  return `<div class="small muted cdburn">🏃 ${L.reduce((t, c) => t + +c.min, 0)} min cardio burned about <b>${kc}</b> kcal. That’s not added to your target, so eating a little extra on cardio days is fine.</div>`;
+}
+// body weight trend: 7-day average and rate per week (only shown to you, behind your PIN)
+function weightTrend(wi) {
+  const ks = Object.keys(wi).filter(k => +wi[k] > 0).sort(); if (ks.length < 2) return '';
+  const avg = end => { const from = shiftKey(end, -6), v = ks.filter(k => k >= from && k <= end).map(k => +wi[k]); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
+  const last = ks[ks.length - 1], a1 = avg(last), a0 = avg(shiftKey(last, -14));
+  const rate = a1 != null && a0 != null ? (a1 - a0) / 2 : null;
+  return `<div class="wttrend"><span>7-day average <b>${a1.toFixed(1)} lb</b></span>${rate != null ? `<span>Trend <b class="${rate < 0 ? 'down' : rate > 0 ? 'upw' : ''}">${rate > 0 ? '+' : ''}${rate.toFixed(1)} lb/week</b></span>` : '<span class="muted">Log for 2+ weeks to see your trend</span>'}<span class="muted">🔒 only you</span></div>`;
 }
 
 function viewHome() {
@@ -2260,8 +2672,10 @@ function viewHome() {
       return `<button class="row" data-act="info" data-id="${e.id}"><span class="thumb">${demoSvg(e.id)}</span><span class="rowtxt"><b>${i + 1}. ${esc(ex.name)}</b><small>${exLine(e)}</small><small class="muted">${lastLine(e.id)}${sg.up ? ` <span class="up">↑ ${sg.w} lb</span>` : ''}</small></span><span class="chev">›</span></button>`;
     }).join('') + `</div>`;
   }
+  h += goalWeekCard();
   if (S.settings.profile.limits) h += `<div class="tip">⚠️ Remember: ${esc(S.settings.profile.limits)}. Skip or swap anything that hurts.</div>`;
   h += `<div class="card buildcard"><div><b>Build your own workout</b><small class="muted">Pick body parts and get suggested exercises</small></div><button class="btn primary" data-act="sheet" data-s="build">Build</button></div>`;
+  h += `<div class="card buildcard cdcard"><div><b>Log cardio</b><small class="muted">Walk, incline treadmill, run, bike and more</small></div><button class="btn primary" data-act="cardio-new">Log</button></div>`;
   const last = sessionsSorted()[0];
   if (last) h += `<div class="card"><div class="eyebrow">Last workout</div><b>${esc(last.name)}</b> · ${fmtDate(last.start)} · ${fmtClock((last.end - last.start) / 1000)} · ${last.ex.reduce((s, e) => s + e.sets.length, 0)} sets</div>`;
   return h;
@@ -2292,7 +2706,7 @@ function viewWorkout() {
       <label>Reps<div class="stepper"><button data-act="step" data-f="in-r" data-d="-1">−</button><input id="in-r" type="number" inputmode="numeric" value="${rVal}" placeholder="${e.target.hi}"><button data-act="step" data-f="in-r" data-d="1">+</button></div></label>
     </div>
     <button class="btn primary big" data-act="log">✓ Log ${done ? 'extra set' : 'set ' + n}</button>
-    ${e.sets.length ? `<div class="sets">${e.sets.map((s, i) => `<div class="setrow"><span class="sn">${i + 1}</span><span>${s.w} lb × ${s.r}</span><button class="x" data-act="del-set" data-i="${i}" aria-label="Remove set">✕</button></div>`).join('')}</div>` : ''}
+    ${e.sets.length ? `<div class="sets">${e.sets.map((s, i) => `<div class="setrow"><span class="sn">${i + 1}</span><span>${s.w} lb × ${s.r}${s.pr ? ' <span class="prtag">🏆 PR</span>' : ''}</span><button class="x" data-act="del-set" data-i="${i}" aria-label="Remove set">✕</button></div>`).join('')}</div>` : ''}
   </div>
   <div class="wnav">
     <button class="btn ghost" data-act="goto" data-i="${a.i - 1}" ${a.i === 0 ? 'disabled' : ''}>‹ Prev</button>
@@ -2307,6 +2721,7 @@ function viewSheet() {
   if (UI.sheet === 'pin' && UI.pin) return viewPin();
   if (UI.sheet === 'week') return viewWeekPlanner();
   if (UI.sheet === 'follow') return viewFollow();
+  if (UI.sheet === 'cardio') return viewCardioSheet();
   if (UI.sheet === 'liftlog') {
     return `<div class="panel"><div class="phead"><h3>Log a max</h3><button class="x" data-act="close">✕</button></div>
       <p class="small muted">Enter your heaviest set. A true 1-rep max is fine, or any set of up to 12 reps and it estimates the 1RM.</p>
@@ -2404,6 +2819,7 @@ function viewProgress() {
   const weekAgo = Date.now() - 7 * 864e5;
   let h = `<div class="stats card"><div><b>${ss.filter(s => s.start > weekAgo).length}</b><small>workouts this week</small></div><div><b>${ss.length}</b><small>total workouts</small></div><div><b>${ss.reduce((t, s) => t + s.ex.reduce((u, e) => u + e.sets.length, 0), 0)}</b><small>total sets</small></div></div>`;
   h += strengthCard();
+  h += cardioCard(true);
   // my body
   const heat = weekHeat(); const top = Object.entries(heat).filter(([, v]) => v > 0).sort((x, y) => y[1] - x[1]);
   const untrained = Object.keys(MUSCLE_NAMES).filter(k => !(heat[k] > 0));
@@ -2418,6 +2834,7 @@ function viewProgress() {
   const lastW = wk.length ? wi[wk[wk.length - 1]] : S.settings.profile.weightLb;
   h += `<div class="card"><div class="phead"><h3>Body weight</h3>${wk.length >= 2 ? `<span class="muted">${(wi[wk[wk.length - 1]] - wi[wk[0]] > 0 ? '+' : '') + (wi[wk[wk.length - 1]] - wi[wk[0]]).toFixed(1)} lb since ${fmtDate(parseKey(wk[0]), { month: 'short', day: 'numeric' })}</span>` : ''}</div>
     ${lineChart(wk.slice(-60).map(k => ({ x: parseKey(k).getTime(), y: wi[k] })), { fmt: v => v.toFixed(1) })}
+    ${weightTrend(wi)}
     <div class="inline"><input id="bw" type="number" inputmode="decimal" placeholder="${lastW}" aria-label="Today's weight in pounds"><button class="btn primary" data-act="log-bw">Log today’s weight</button></div></div>`;
   // exercise progress
   const ids = [...new Set(ss.flatMap(s => s.ex.map(e => e.id)))];
@@ -2500,7 +2917,8 @@ function viewMacros() {
   const left = t.kcal - tot.kcal;
   let h = `<div class="datenav"><button class="btn ghost" data-act="mdate" data-d="-1">‹</button><b>${label}</b><button class="btn ghost" data-act="mdate" data-d="1" ${k >= today ? 'disabled' : ''}>›</button></div>
   <div class="card"><div class="kcalbig"><b>${Math.abs(Math.round(left)).toLocaleString()}</b><span>${left >= 0 ? 'calories left' : 'calories over'}</span><small class="muted">${Math.round(tot.kcal).toLocaleString()} eaten of ${t.kcal.toLocaleString()}</small></div>
-    ${bar('Calories', tot.kcal, t.kcal, 'kcal', 'k')}${bar('Protein', tot.p, t.p, 'g', 'p')}${bar('Carbs', tot.c, t.c, 'g', 'c')}${bar('Fat', tot.f, t.f, 'g', 'f')}</div>
+    ${bar('Calories', tot.kcal, t.kcal, 'kcal', 'k')}${bar('Protein', tot.p, t.p, 'g', 'p')}${bar('Carbs', tot.c, t.c, 'g', 'c')}${bar('Fat', tot.f, t.f, 'g', 'f')}${cardioBurnLine(k)}</div>
+  ${waterCard(k)}
   ${goalCard()}
   <div class="card"><div class="phead"><h3>Add food</h3></div>
     <div class="segs"><button class="${UI.fmode !== 'manual' ? 'on' : ''}" data-act="fmode" data-m="lookup">Look it up</button><button class="${UI.fmode === 'manual' ? 'on' : ''}" data-act="fmode" data-m="manual">Enter macros myself</button></div>
@@ -2664,7 +3082,7 @@ function demoPanel(id) {
   return `${seg}<div class="demowrap">${inner}</div><div class="mtext"><b>Main:</b> ${mt.p.join(', ') || '—'}${mt.s.length ? ` <span class="muted">· Also: ${mt.s.join(', ')}</span>` : ''}</div>`;
 }
 // ---------- Exercise library ----------
-const CABLE = new Set(['tri_pushdown', 'tri_overhead', 'seated_row', 'face_pull', 'cable_curl', 'cable_fly', 'straight_pd', 'cable_crunch']);
+const CABLE = new Set(['cable_kickback', 'cable_pullover', 'tri_pushdown', 'tri_overhead', 'seated_row', 'face_pull', 'cable_curl', 'cable_fly', 'straight_pd', 'cable_crunch']);
 function equipOf(id) { const e = EXERCISES[id] || {}; return e.free ? 'Dumbbell' : e.bar ? 'Barbell' : e.bw ? 'Bodyweight' : CABLE.has(id) ? 'Cable' : 'Machine'; }
 function libMatches() {
   const L = UI.lib, q = L.q.trim().toLowerCase();
@@ -2853,9 +3271,10 @@ const PARTS = {
   db_lunge: ['Quads', 'Glutes'], db_bss: ['Quads', 'Glutes'], db_stepup: ['Quads', 'Glutes'], db_hip_thrust: ['Glutes', 'Hamstrings'], db_sumo: ['Hips', 'Glutes', 'Quads'], db_calf: ['Calves'],
   db_incline: ['Chest', 'Shoulders', 'Triceps'], db_fly: ['Chest'], db_lat_raise: ['Shoulders'], db_rear_fly: ['Shoulders', 'Back'], db_oh_ext: ['Triceps'], db_bicep_curl: ['Biceps'], db_crunch: ['Abs'],
   bb_bench: ['Chest', 'Triceps', 'Shoulders'], bb_squat: ['Quads', 'Glutes'], bb_deadlift: ['Hamstrings', 'Glutes', 'Back'], bb_row: ['Back', 'Biceps'], bb_ohp: ['Shoulders', 'Triceps'], bb_curl: ['Biceps'],
+  bb_hip_thrust: ['Glutes', 'Hamstrings'], cable_kickback: ['Glutes'], db_back_ext: ['Back', 'Glutes', 'Hamstrings'], cable_pullover: ['Back'], decline_situp: ['Abs'],
   cable_fly: ['Chest'], straight_pd: ['Back'], cable_crunch: ['Abs'], assisted_pullup: ['Back', 'Biceps'], machine_dip: ['Triceps', 'Chest'], back_ext: ['Back', 'Glutes', 'Hamstrings'], pushup: ['Chest', 'Triceps', 'Shoulders'], hanging_knee: ['Abs'],
 };
-const COMPOUND = new Set(['chest_press', 'incline_press', 'db_bench', 'shoulder_press', 'db_shoulder_press', 'lat_pulldown', 'seated_row', 'chest_row', 'db_row', 'leg_press', 'hack_squat', 'goblet_squat', 'db_rdl', 'db_lunge', 'db_bss', 'db_stepup', 'db_hip_thrust', 'db_sumo', 'db_incline', 'bb_bench', 'bb_squat', 'bb_deadlift', 'bb_row', 'bb_ohp', 'assisted_pullup', 'machine_dip', 'pushup']);
+const COMPOUND = new Set(['bb_hip_thrust', 'chest_press', 'incline_press', 'db_bench', 'shoulder_press', 'db_shoulder_press', 'lat_pulldown', 'seated_row', 'chest_row', 'db_row', 'leg_press', 'hack_squat', 'goblet_squat', 'db_rdl', 'db_lunge', 'db_bss', 'db_stepup', 'db_hip_thrust', 'db_sumo', 'db_incline', 'bb_bench', 'bb_squat', 'bb_deadlift', 'bb_row', 'bb_ohp', 'assisted_pullup', 'machine_dip', 'pushup']);
 const BIG = new Set(['Chest', 'Back', 'Quads', 'Shoulders']);
 function exercisesFor(parts) {
   const primary = [], secondary = [];
@@ -3162,6 +3581,14 @@ document.addEventListener('click', ev => {
     case 'wk-part': { const i = +b.dataset.i, p = b.dataset.p, W = UI.week; W[i] = W[i].includes(p) ? W[i].filter(x => x !== p) : [...W[i], p]; render(); break; }
     case 'wk-clear': UI.week[+b.dataset.i] = []; render(); break;
     case 'wk-save': saveWeekPlan(); break;
+    case 'wgoal': S.settings.weekGoal = Math.max(1, Math.min(7, (+S.settings.weekGoal || 4) + +b.dataset.d)); touch('settings'); render(); break;
+    case 'water': { const k = UI.macroDate; S.macros[k] = S.macros[k] || { entries: [] }; const v = Math.max(0, Math.round(((+S.macros[k].water || 0) + +b.dataset.oz) * 10) / 10); S.macros[k].water = v; touch('m_' + k); render(); if (+b.dataset.oz > 0 && v >= waterGoal() && v - +b.dataset.oz < waterGoal()) toast('💧 Water goal hit!'); break; }
+    case 'cardio-new': UI.cd = UI.cd || { t: 'walk', d: dateKey(), eff: 1 }; UI.sheet = 'cardio'; render(); break;
+    case 'cardio-type': { const t = b.dataset.t; if (UI.cd.t !== t) { UI.cd.t = t; delete UI.cd.mph; delete UI.cd.inc; } render(); break; }
+    case 'cardio-eff': UI.cd.eff = +b.dataset.i; render(); break;
+    case 'cardio-save': cardioSave(); break;
+    case 'cardio-all': UI.cdAll = !UI.cdAll; render(); break;
+    case 'cardio-del': { const id = b.dataset.id; if (UI.confirm !== 'cd:' + id) { UI.confirm = 'cd:' + id; render(); break; } S.cardio[id] = { id, del: true }; touch('k_' + id); UI.confirm = null; render(); toast('Cardio deleted'); break; }
     case 'lift-save': { const id = $('#ll-id').value, w = num($('#ll-w').value), r = Math.round(num($('#ll-r').value)); const er = $('#ll-err');
       if (!(w > 0 && w < 2000)) { er.textContent = 'Enter the weight in pounds.'; break; } if (!(r >= 1 && r <= 12)) { er.textContent = 'Reps must be 1 to 12.'; break; }
       const before = strengthOf(S).bests[id] || 0; S.settings.lifts = S.settings.lifts || {}; (S.settings.lifts[id] = S.settings.lifts[id] || []).push({ w, r, t: Date.now() }); touch('settings');
@@ -3196,9 +3623,9 @@ document.addEventListener('click', ev => {
     case 'rt-del': edSplit().days[+b.dataset.di].ex.splice(+b.dataset.ei, 1); touch('settings'); render(); break;
     case 'rt-add': edSplit().days[+b.dataset.di].ex.push(suggestFirst(edSplit().days[+b.dataset.di])); touch('settings'); render(); break;
     case 'reset-routine': { const d = splitById('default'); if (d) d.days = clone(DEFAULT_ROUTINE); else S.settings.splits.unshift(defaultSplit()); touch('settings'); UI.confirm = null; toast('Default split reset'); render(); break; }
-    case 'backup': { const txt = JSON.stringify({ app: 'gym', v: 1, settings: S.settings, sessions: S.sessions, macros: S.macros }); try { navigator.clipboard.writeText(txt).then(() => toast('Backup copied. Paste it somewhere safe, like a note.'), () => showBackup(txt)); } catch (e) { showBackup(txt); } break; }
+    case 'backup': { const txt = JSON.stringify({ app: 'gym', v: 1, settings: S.settings, sessions: S.sessions, macros: S.macros, cardio: S.cardio }); try { navigator.clipboard.writeText(txt).then(() => toast('Backup copied. Paste it somewhere safe, like a note.'), () => showBackup(txt)); } catch (e) { showBackup(txt); } break; }
     case 'restore': {
-      try { const d = JSON.parse($('#restore').value); if (!d.settings) throw 0; S.settings = Object.assign(defaultState().settings, d.settings); S.sessions = d.sessions || {}; S.macros = d.macros || {}; touch('settings'); Object.keys(S.sessions).forEach(k => touch('w_' + k)); Object.keys(S.macros).forEach(k => touch('m_' + k)); toast('Data restored'); }
+      try { const d = JSON.parse($('#restore').value); if (!d.settings) throw 0; S.settings = Object.assign(defaultState().settings, d.settings); S.sessions = d.sessions || {}; S.macros = d.macros || {}; S.cardio = d.cardio || {}; Object.keys(S.cardio).forEach(k => touch('k_' + k)); touch('settings'); Object.keys(S.sessions).forEach(k => touch('w_' + k)); Object.keys(S.macros).forEach(k => touch('m_' + k)); toast('Data restored'); }
       catch (e) { toast('That doesn’t look like a backup from this app'); }
       UI.confirm = null; render(); break;
     }
@@ -3231,6 +3658,7 @@ document.addEventListener('input', ev => {
   if (el.id === 'lk-q') lkRefresh(true);
   if (el.id === 'ax-q') { UI.ax.q = el.value; $('#ax-list').innerHTML = axList(); }
   if (el.id === 'lk-amt') lkPreview();
+  if (el.dataset.cd && UI.cd) { UI.cd[el.dataset.cd] = el.value; const pv = $('#cd-prev'); if (pv) pv.innerHTML = cdPrevText(cardioKcal({ ...UI.cd, min: num(UI.cd.min), mi: num(UI.cd.mi), mph: num(UI.cd.mph), inc: UI.cd.inc === '' || UI.cd.inc == null ? undefined : num(UI.cd.inc) }, myLb())); }
   if (el.closest && el.closest('#foodform')) { const q = num($('#f-q').value) || 1; $('#f-kcal').textContent = kcalOf(num($('#f-p').value) * q, num($('#f-c').value) * q, num($('#f-f').value) * q) + ' kcal'; }
   if (el.dataset.pname != null && el.hasAttribute('data-pname')) { curProfile().name = el.value.slice(0, 30) || 'Me'; touchProfiles(); $('#pname') && ($('#pname').textContent = curProfile().name); }
   if (el.dataset.sp === 'name') { edSplit().name = el.value.slice(0, 60) || 'My split'; touch('settings'); }
@@ -3247,6 +3675,7 @@ document.addEventListener('change', ev => {
   if (el.dataset.rt) { const [di, ei, f] = el.dataset.rt.split('.'); const e = edSplit().days[+di].ex[+ei]; e[f] = f === 'id' ? el.value : Math.max(f === 'rest' ? 0 : 1, Math.round(num(el.value))); if (e.lo > e.hi) e.hi = e.lo; touch('settings'); if (f === 'id') render(); }
   if (el.dataset.act === 'prog-ex') { UI.progEx = el.value; render(); }
   if (el.dataset.act === 'rk-ex') { UI.rk.l = el.value; render(); }
+  if (el.dataset.act === 'wgoal-in') { const v = Math.round(num(el.value)); if (v >= 16 && v <= 300) { S.settings.waterGoal = v; touch('settings'); } render(); }
 });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { if (S.active) keepAwake(true); tick(); } });
 
