@@ -325,6 +325,10 @@ const DEFS = `<defs>
 <linearGradient id="gMusF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f4609a"/><stop offset="1" stop-color="#c8235f"/></linearGradient>
 <linearGradient id="gBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3effc"/><stop offset=".6" stop-color="#dcd4f1"/><stop offset="1" stop-color="#b9afd8"/></linearGradient>
 <linearGradient id="gBodyA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".6" stop-color="#ebe4fb"/><stop offset="1" stop-color="#c9bdf0"/></linearGradient>
+<linearGradient id="gSkin" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6d3b3"/><stop offset=".55" stop-color="#e2ad86"/><stop offset="1" stop-color="#bf8460"/></linearGradient>
+<linearGradient id="gShirt" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c5cd6"/><stop offset=".6" stop-color="#5a3fb0"/><stop offset="1" stop-color="#3d2a80"/></linearGradient>
+<linearGradient id="gShorts" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4a4578"/><stop offset="1" stop-color="#2a2650"/></linearGradient>
+<linearGradient id="gShoe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#d9d2f0"/></linearGradient>
 <linearGradient id="gFloor" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8b5cf6" stop-opacity="0"/><stop offset=".5" stop-color="#8b5cf6" stop-opacity=".6"/><stop offset="1" stop-color="#3b82f6" stop-opacity="0"/></linearGradient>
 </defs>`;
 
@@ -417,6 +421,11 @@ const MS_LINE = `fill="none" stroke="#b9afd8" stroke-width=".6" stroke-linecap="
 const pathEl = (d, fill, extra = '') => `<path d="${d}" fill="${fill}" ${extra}/>`;
 // highlight paint for working muscles
 let SHOW_MUS = false;
+// clothed, skin-toned figure: purple tee, dark shorts, white trainers; far-side limbs in shade
+const SK = { skin: 'url(#gSkin)', skinF: '#9a6a52', shirt: 'url(#gShirt)', shirtF: '#3a2a73', shorts: 'url(#gShorts)', shortsF: '#15122a', shoe: 'url(#gShoe)', shoeF: '#8f86b8', hair: '#2b2135', line: 'stroke="#140f24" stroke-width=".8" stroke-linejoin="round"' };
+const SLEEVE_S = [[-0.22, 0], [-0.14, 7.8], [0.18, 8.4], [0.46, 7.8], [0.52, 0], [0.46, -7.6], [0.16, -8.2], [-0.14, -7.4]];
+const SHORT_S = [[-0.14, -10.5], [-0.12, 10.5], [0.3, 11], [0.62, 10], [0.68, 0], [0.62, -9.6], [0.3, -10.6]];
+const SHOE_S = [[-0.5, 1.8], [-0.46, -3.8], [0.4, -4], [1.1, -3.4], [1.38, -1.2], [1.3, 1.5], [0.6, 3.6], [0, 4.6], [-0.35, 4.2]];
 function hlPaths(list, work, k) {
   if (!work || !work.length || !SHOW_MUS) return '';
   const op = (0.7 + 0.3 * k).toFixed(2);
@@ -462,7 +471,13 @@ function sideBody(J) {
   const ua = frame(J.shoulder, J.elbow, 1), fa = frame(J.elbow, J.hand, 1);
   const dir = unit(sub(J.hand, J.elbow)), hd = frame(J.hand, add(J.hand, mul(dir, 9)), 1);
   arms.push(limbSet(ua, SIDE.uarm, SIDE.uarmM, LW.ua), limbSet(fa, SIDE.farm, SIDE.farmM, LW.fa), { sil: shp(hd, SIDE.hand) + shp(hd, SIDE.thumb), mus: [] });
-  return { legs, torso, head, arms, kneecap };
+  const wT = (T, w) => (a, o) => T(a, o * w);
+  const clothes = { sleeve: shp(wT(ua, LW.ua), SLEEVE_S), shorts: shp(wT(thigh, LW.th), SHORT_S), shoe: shp(foot, SHOE_S),
+    trunks: smooth([[-4, -11], [8, -9.5], [11, -9.6], [11, 9.4], [6, 9.5], [-2, 8], [-7, 0]].map(([s, o]) => TP(s, o))),
+    band: smooth([TP(10.5, -9.8), TP(11.5, 0), TP(10.5, 9.6)], true),
+    eye: HP(2.6 * HEADK, 6.4 * HEADK), ear: HP(-0.5 * HEADK, -1.5 * HEADK),
+    hairM: shp(HP, [[11.9, 0], [10.6, 5.2], [8.4, 6.8], [8.6, 3.5], [7.6, -1], [4.5, -5.5], [-1.5, -8], [-6.5, -8.8], [-7.6, -10.4], [-2, -10.6], [4, -10.2], [9.6, -6.6]].map(([a, o]) => [a * HEADK, o * HEADK])) };
+  return { legs, torso, head, arms, kneecap, clothes };
 }
 function figureSide(J, P, opts = {}) {
   if (opts.ghost) {
@@ -475,18 +490,18 @@ function figureSide(J, P, opts = {}) {
   const JF = J.ankle2 ? { hip: J.hip, knee: J.knee2, ankle: J.ankle2, toe: J.toe2 } : { hip: F(J.hip), knee: F(J.knee), ankle: F(J.ankle), toe: F(J.toe) };
   const fb = sideBody({ ...J, ...JF, shoulder: F(J.shoulder), elbow: F(J.elbow), hand: F(J.hand), head: J.head });
   let far = '';
-  fb.legs.forEach(l => far += pathEl(l.sil, C.far));
-  fb.arms.forEach(l => far += pathEl(l.sil, C.far));
-  const B = sideBody(J);
-  const lc = MOV.leg ? ACT : C.body, ac = MOV.arm ? ACT : C.body;
+  const L_ = SK.line;
+  far += pathEl(fb.legs[0].sil, SK.skinF, L_) + pathEl(fb.legs[1].sil, SK.skinF, L_) + pathEl(fb.clothes.shorts, SK.shortsF, L_) + pathEl(fb.clothes.shoe, SK.shoeF, L_);
+  far += pathEl(fb.arms[0].sil, SK.skinF, L_) + pathEl(fb.arms[1].sil, SK.skinF, L_) + pathEl(fb.arms[2].sil, SK.skinF, L_) + pathEl(fb.clothes.sleeve, SK.shirtF, L_);
+  const B = sideBody(J), K = B.clothes;
   let body = '';
-  B.legs.forEach(l => body += pathEl(l.sil, lc, OUTL) + neutral(l.mus));
-  body += `<ellipse cx="${f1(B.kneecap[0])}" cy="${f1(B.kneecap[1])}" rx="2.6" ry="2.2" ${MS_N}/>`;
-  body += pathEl(B.head.neck, C.body);
-  body += pathEl(B.torso.sil, C.body, OUTL) + neutral(B.torso.mus);
-  body += pathEl(B.head.sil, C.body, OUTL) + (FEM ? pathEl(B.head.hair, '#2a2245', OUTL) : '');
-  let arm = MOV.arm ? ln(J.shoulder, J.elbow, 15, '#a78bfa', 0.16) + ln(J.elbow, J.hand, 11, '#a78bfa', 0.16) : '';
-  B.arms.forEach(l => arm += pathEl(l.sil, ac, OUTL) + neutral(l.mus));
+  body += pathEl(B.legs[0].sil, SK.skin, L_) + pathEl(B.legs[1].sil, SK.skin, L_) + pathEl(K.shorts, SK.shorts, L_) + pathEl(K.shoe, SK.shoe, L_);
+  body += pathEl(B.head.neck, SK.skin);
+  body += pathEl(B.torso.sil, SK.shirt, L_) + pathEl(K.trunks, SK.shorts, L_) + `<path d="${K.band}" fill="none" stroke="#f472b6" stroke-width="1" opacity=".7"/>`;
+  body += pathEl(B.head.sil, SK.skin, L_) + (FEM ? pathEl(B.head.hair, SK.hair, L_) : pathEl(K.hairM, SK.hair, L_));
+  body += `<ellipse cx="${f1(K.ear[0])}" cy="${f1(K.ear[1])}" rx="1.7" ry="2.3" fill="#d39a74" stroke="#8a5a40" stroke-width=".5"/>` + circ(K.eye, 0.9, '#2b2135');
+  let arm = MOV.arm ? ln(J.shoulder, J.elbow, 15, '#a78bfa', 0.14) + ln(J.elbow, J.hand, 11, '#a78bfa', 0.14) : '';
+  arm += pathEl(B.arms[0].sil, SK.skin, L_) + pathEl(B.arms[1].sil, SK.skin, L_) + pathEl(B.arms[2].sil, SK.skin, L_) + pathEl(K.sleeve, SK.shirt, L_);
   const hlBody = [...B.legs.flatMap(l => l.mus), ...B.torso.mus], hlArm = B.arms.flatMap(l => l.mus);
   return { far, body, arm, hlBody, hlArm };
 }
@@ -579,12 +594,20 @@ function frontBody(J) {
     const th = frame(J['hip' + z], J['knee' + z], g), sh = frame(J['knee' + z], J['ankle' + z], g);
     const an = J['ankle' + z];
     const foot = smooth([[-4, -1], [4, -1], [6.5, 3.5], [5.5, 6.5], [-3.5, 6.5], [-5, 3.5]].map(([x, y]) => [an[0] + g * x + g * 1.5, an[1] + y]));
-    sides[z] = {
+    const wF = (T, w) => (a, o) => T(a, o * w);
+    const clothes = { sleeve: shp(wF(ua, LW.ua), [[-0.22, 0], [-0.12, 7.9], [0.2, 8.1], [0.46, 6.8], [0.52, 0], [0.46, -6.4], [0.2, -6.8], [0, -6.2]]),
+      shorts: shp(wF(th, LW.fth), [[-0.1, 0], [-0.06, 9.6], [0.25, 10.1], [0.62, 8.8], [0.68, 0], [0.62, -6.8], [0.3, -8.5], [0, -8.4]]) };
+    sides[z] = { clothes,
       arms: [limbSet(ua, FR.uarm, FR.uarmM, LW.ua), limbSet(fa, FR.farm, FR.farmM, LW.fa), { sil: shp(hd, FR.hand) + shp(hd, FR.thumb), mus: [] }],
       legs: [limbSet(th, FR.thigh, FR.thighM, LW.fth), limbSet(sh, FR.shin, FR.shinM, LW.sh), { sil: foot, mus: [] }],
       kneecap: th(1.0, 0),
     };
   }
+  const TR = FR.torsoR; let cut = null;
+  for (let i = 1; i < TR.length; i++) if (TR[i - 1][1] < 44 && TR[i][1] >= 44) { const [x0, y0] = TR[i - 1], [x1, y1] = TR[i]; cut = [x0 + (x1 - x0) * (44 - y0) / (y1 - y0), 44]; }
+  const half = [[0, 44], cut || [16, 44], ...TR.filter(([x, y]) => y > 44 && x > 0), TR[TR.length - 1]];
+  torso.trunks = smooth(halfSym(half).map(A));
+  torso.band = smooth([A([-(cut || [16])[0], 44]), A([0, 44.6]), A([(cut || [16])[0], 44])], true);
   return { torso, head, sides, A };
 }
 function figureFront(J, P, opts = {}) {
@@ -601,15 +624,21 @@ function figureFront(J, P, opts = {}) {
   let farArm = '';
   for (const z of (J.far ? ['R', 'L'] : ['L', 'R'])) {
     const S = B.sides[z];
-    if (J.far === z) { S.legs.forEach(l => { legs += pathEl(l.sil, C.far, st); }); S.arms.forEach(l => { farArm += pathEl(l.sil, C.far, st); }); continue; }
-    S.legs.forEach(l => { legs += pathEl(l.sil, lc, st) + neutral(l.mus); hlBody.push(...l.mus); });
-    legs += `<ellipse cx="${f1(S.kneecap[0])}" cy="${f1(S.kneecap[1])}" rx="2.6" ry="2.3" ${MS_N}/>`;
-    if (MOV.arm) arms += ln(J['sh' + z], J['elbow' + z], 15, '#a78bfa', 0.16) + ln(J['elbow' + z], J['hand' + z], 11, '#a78bfa', 0.16);
-    S.arms.forEach(l => { arms += pathEl(l.sil, ac, st) + neutral(l.mus); hlArm.push(...l.mus); });
+    const fr = J.far === z, L_ = SK.line, sk = fr ? SK.skinF : SK.skin;
+    let lg = pathEl(S.legs[0].sil, sk, L_) + pathEl(S.legs[1].sil, sk, L_) + pathEl(S.clothes.shorts, fr ? SK.shortsF : SK.shorts, L_) + pathEl(S.legs[2].sil, fr ? SK.shoeF : SK.shoe, L_);
+    let am = pathEl(S.arms[0].sil, sk, L_) + pathEl(S.arms[1].sil, sk, L_) + pathEl(S.arms[2].sil, sk, L_) + pathEl(S.clothes.sleeve, fr ? SK.shirtF : SK.shirt, L_);
+    legs += lg;
+    if (fr) { farArm += am; continue; }
+    if (MOV.arm) arms += ln(J['sh' + z], J['elbow' + z], 15, '#a78bfa', 0.14) + ln(J['elbow' + z], J['hand' + z], 11, '#a78bfa', 0.14);
+    arms += am;
   }
   const h = B.head, hx = J.head[0], hy = J.head[1];
-  const head = pathEl(h.neck, C.body) + pathEl(h.sil, C.body, st) + hairFront(J, false);
-  const torso = pathEl(B.torso.sil, C.body, st) + neutral(B.torso.mus) + `<path d="M100,${f1(J.shR[1] + 18)} L100,${f1(J.shR[1] + 54)}" ${MS_LINE}/>` + head;
+  const hA = ([x, y]) => [hx + x * HEADK, hy + y * HEADK];
+  const face = FEM ? '' : pathEl(smooth(halfSym([[0, -13.4], [7.8, -11.3], [10.4, -5.2], [10, -1.5], [8.6, -6.4], [4.8, -8.7], [0, -9.2]]).map(hA)), SK.hair, SK.line);
+  const ears = [-1, 1].map(s => `<ellipse cx="${f1(hx + s * 10.3 * HEADK)}" cy="${f1(hy + 0.5 * HEADK)}" rx="1.6" ry="2.4" fill="#d39a74" stroke="#8a5a40" stroke-width=".5"/>`).join('');
+  const eyes = [-1, 1].map(s => circ(hA([s * 3.8, 0.4]), 0.85, '#2b2135')).join('');
+  const head = ears + pathEl(h.neck, SK.skin) + pathEl(h.sil, SK.skin, SK.line) + face + hairFront(J, false) + eyes;
+  const torso = pathEl(B.torso.sil, SK.shirt, SK.line) + pathEl(B.torso.trunks, SK.shorts, SK.line) + `<path d="${B.torso.band}" fill="none" stroke="#f472b6" stroke-width="1" opacity=".7"/>` + head;
   return { legs: legs + farArm, torso, arms, hlBody, hlArm };
 }
 function drawFront(P, t, props, extra) {
