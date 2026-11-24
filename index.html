@@ -178,7 +178,7 @@ option{background:#141027;color:#fff}
 .rktop b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rkval{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
 .rkbar{height:6px;border-radius:4px;background:rgba(255,255,255,.07);margin-top:6px;overflow:hidden}.rkbar i{display:block;height:100%;border-radius:4px;background:var(--grad)}.rkbar i.neg{background:#64748b}
 .scroll{overflow-x:auto}.rktable{width:100%;border-collapse:collapse;font-size:13px}.rktable th,.rktable td{padding:8px 6px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}.rktable th:first-child,.rktable td:first-child{text-align:left;color:var(--mut)}
-.rktable td.best{color:#f9a8d4;font-weight:800}.whoami{margin:10px 0 14px}.liftseg button{font-size:12px;padding:7px 2px}.strstats{margin:4px 0 8px;padding:0;background:none;border:0}.strtable td.up{color:#86efac;font-weight:700}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rktable td.best{color:#f9a8d4;font-weight:800}.whoami{margin:10px 0 14px}.liftseg button{font-size:12px;padding:7px 2px}.strstats{margin:4px 0 8px;padding:0;background:none;border:0}.strtable td.up{color:#86efac;font-weight:700}.wkday{padding:10px 0;border-bottom:1px solid var(--line)}.wkday.today .wkhead b{color:#f0abfc}.wkhead{display:flex;align-items:center;gap:8px;margin-bottom:6px}.wkhead small{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wkday .parts .pchip{font-size:12px;padding:5px 9px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 </style>
 </head>
 <body>
@@ -1953,10 +1953,11 @@ function viewRanking() {
 }
 
 function viewHome() {
+  if (activeSplit().weekly && S.settings.weekSeen !== dateKey()) { S.settings.cycle = todayIdx(); S.settings.weekSeen = dateKey(); }
   if (S.settings.cycle >= routine().length) S.settings.cycle = 0;
   const c = S.settings.cycle, day = routine()[c], nd = routine().length;
-  let h = `<div class="splithead"><span class="muted small">Split</span><b>${esc(activeSplit().name)}</b><button class="btn small ghost" data-act="goto-splits">Change</button></div>`;
-  h += `<div class="cycle" style="grid-template-columns:repeat(${Math.min(nd, 7)},1fr)">${routine().map((d, i) => `<button class="cday ${i === c ? 'on' : ''} ${d.key === 'rest' ? 'rest' : ''}" data-act="set-cycle" data-i="${i}"><small>Day ${i + 1}</small>${esc(d.name)}</button>`).join('')}</div>`;
+  let h = `<div class="splithead"><span class="muted small">Split</span><b>${esc(activeSplit().name)}</b><button class="btn small ghost" data-act="week-plan">${weekSplit() ? 'Edit my week' : 'Plan my week'}</button><button class="btn small ghost" data-act="goto-splits">Change</button></div>`;
+  h += `<div class="cycle" style="grid-template-columns:repeat(${Math.min(nd, 7)},1fr)">${routine().map((d, i) => `<button class="cday ${i === c ? 'on' : ''} ${d.key === 'rest' ? 'rest' : ''}" data-act="set-cycle" data-i="${i}"><small>${activeSplit().weekly ? WEEKDAYS[i].slice(0, 3) + (i === todayIdx() ? ' · today' : '') : 'Day ' + (i + 1)}</small>${esc(d.name)}</button>`).join('')}</div>`;
   if (S.active) h += '';
   if (day.key === 'rest') {
     h += `<div class="card hero rest"><div class="eyebrow">Day ${c + 1} of ${routine().length} · Up next</div><h1>Rest day</h1>
@@ -2019,6 +2020,7 @@ function viewWorkout() {
 
 function viewSheet() {
   const a = S.active;
+  if (UI.sheet === 'week') return viewWeekPlanner();
   if (UI.sheet === 'liftlog') {
     return `<div class="panel"><div class="phead"><h3>Log a max</h3><button class="x" data-act="close">✕</button></div>
       <p class="small muted">Enter your heaviest set. A true 1-rep max is fine, or any set of up to 12 reps and it estimates the 1RM.</p>
@@ -2603,6 +2605,39 @@ function makeSplit(t, name) {
 }
 function partChips(sel, act, extra = '') { return `<div class="chips parts">${PARTS_LIST.map(p => `<button class="pchip ${sel.includes(p) ? 'on' : ''}" data-act="${act}" data-p="${p}" ${extra}>${p}</button>`).join('')}</div>`; }
 
+// ---------- Plan my week: body parts per weekday, saved as the person's weekly split ----------
+const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const todayIdx = () => (new Date().getDay() + 6) % 7;
+function weekSplit() { return S.settings.splits.find(s => s.weekly); }
+function openWeekPlanner() {
+  const ws = weekSplit();
+  UI.week = WEEKDAYS.map((_, i) => { const d = ws && ws.days[i]; return d && d.key !== 'rest' ? (d.parts || []).slice() : []; });
+  UI.sheet = 'week'; render();
+}
+function viewWeekPlanner() {
+  const W = UI.week || WEEKDAYS.map(() => []);
+  return `<div class="panel"><div class="phead"><h3>Plan my week</h3><button class="x" data-act="close">✕</button></div>
+    <p class="small muted">Tap the body parts for each day. Leave a day empty to make it a rest day. Exercises are picked for you, and you can change them later.</p>
+    ${WEEKDAYS.map((n, i) => `<div class="wkday ${i === todayIdx() ? 'today' : ''}"><div class="wkhead"><b>${n}</b><small class="muted">${W[i].length ? esc(partsName(W[i])) : 'Rest'}</small>${W[i].length ? `<button class="btn small ghost" data-act="wk-clear" data-i="${i}">Rest</button>` : ''}</div>${partChips(W[i], 'wk-part', `data-i="${i}"`)}</div>`).join('')}
+    <button class="btn primary big" data-act="wk-save">Save my week</button></div>`;
+}
+function saveWeekPlan() {
+  let ws = weekSplit();
+  const old = ws ? ws.days : [];
+  const days = WEEKDAYS.map((n, i) => {
+    const parts = UI.week[i];
+    if (!parts.length) return { key: 'rest', name: 'Rest', ex: [] };
+    const o = old[i];
+    // keep exercises the person already tuned if that day's body parts didn't change
+    if (o && o.key !== 'rest' && JSON.stringify((o.parts || []).slice().sort()) === JSON.stringify(parts.slice().sort())) return { ...o, name: partsName(parts), parts: parts.slice() };
+    return { key: 'custom', name: partsName(parts), parts: parts.slice(), ex: autoPick(parts).map(defaultsFor) };
+  });
+  if (!ws) { ws = { id: 'week', name: 'My week', weekly: true, days }; S.settings.splits.unshift(ws); } else ws.days = days;
+  S.settings.activeSplit = ws.id; S.settings.cycle = todayIdx(); S.settings.weekSeen = dateKey();
+  UI.sheet = null; UI.week = null; touch('settings'); UI.tab = 'train'; render(); window.scrollTo(0, 0);
+  toast(`Saved. ${WEEKDAYS[todayIdx()]}: ${days[todayIdx()].key === 'rest' ? 'rest day' : days[todayIdx()].name}`);
+}
+
 function viewBuild() {
   const B = UI.build || { parts: [], picked: [] };
   let h = `<div class="panel"><div class="phead"><h3>Build your own workout</h3><button class="x" data-act="close">✕</button></div>
@@ -2619,7 +2654,7 @@ function viewBuild() {
   return h + '</div>';
 }
 function viewNewSplit() {
-  const T = [['blank', 'Blank', '2 workout days + 1 rest day, you fill them in'], ['upperlower', 'Upper / Lower', '4 training days a week'], ['fullbody', 'Full body', '3 training days a week'], ['bro', 'Body part', 'Chest, Back, Legs, Shoulders, Arms'], ['ppl', 'Copy of my current default', 'Push, Pull, Legs, Rest, Upper, Lower, Rest']];
+  const T = [['weekly', 'Plan by weekday', 'Pick body parts for Monday to Sunday, e.g. chest and legs on Monday'], ['blank', 'Blank', '2 workout days + 1 rest day, you fill them in'], ['upperlower', 'Upper / Lower', '4 training days a week'], ['fullbody', 'Full body', '3 training days a week'], ['bro', 'Body part', 'Chest, Back, Legs, Shoulders, Arms'], ['ppl', 'Copy of my current default', 'Push, Pull, Legs, Rest, Upper, Lower, Rest']];
   return `<div class="panel"><div class="phead"><h3>New split</h3><button class="x" data-act="close">✕</button></div>
     <label>Name (optional)<input id="ns-name" placeholder="e.g. Summer cut"></label>
     <p class="small muted">Start from:</p>${T.map(([k, n, d]) => `<button class="row" data-act="ns-make" data-t="${k}"><span class="rowtxt"><b>${n}</b><small class="muted">${d}</small></span><span class="chev">›</span></button>`).join('')}
@@ -2629,7 +2664,7 @@ function viewSplits() {
   const sp = edSplit(), act = activeSplit();
   const opt = (v, cur, l) => `<option value="${v}" ${String(v) === String(cur) ? 'selected' : ''}>${l}</option>`;
   const exOpts = cur => Object.entries(EXERCISES).map(([id, e]) => opt(id, cur, esc(e.name) + (e.free ? ' (DB)' : ''))).join('');
-  let h = `<div class="card" id="splits"><div class="phead"><h3>Splits</h3><button class="btn small primary" data-act="sheet" data-s="newsplit">+ New split</button></div>
+  let h = `<div class="card" id="splits"><div class="phead"><h3>Splits</h3><div><button class="btn small ghost" data-act="week-plan">${weekSplit() ? 'Edit my week' : 'Plan my week'}</button> <button class="btn small primary" data-act="sheet" data-s="newsplit">+ New split</button></div></div>
     <p class="small muted">Use sets the split the Train tab follows. Tap a split to edit it.</p>
     ${S.settings.splits.map(s => `<div class="splitrow ${s.id === sp.id ? 'ed' : ''}"><button class="row" data-act="edit-split" data-id="${s.id}"><span class="rowtxt"><b>${esc(s.name)}</b><small class="muted">${s.days.length} days · ${s.days.filter(d => d.key !== 'rest').length} training${s.id === sp.id ? ' · editing' : ''}</small></span></button>${s.id === act.id ? '<span class="badge">In use</span>' : `<button class="btn small ghost" data-act="use-split" data-id="${s.id}">Use</button>`}</div>`).join('')}</div>`;
   h += `<div class="card" id="spedit"><div class="phead"><h3>Edit split</h3></div>
@@ -2710,7 +2745,7 @@ document.addEventListener('click', ev => {
     case 'day-suggest': { const d = edSplit().days[+b.dataset.di]; if (!(d.parts || []).length) { toast('Pick at least one body part first'); break; } d.ex = autoPick(d.parts).map(defaultsFor); touch('settings'); toast(`Added ${d.ex.length} exercises`); render(); break; }
     case 'sp-dup': { const s = clone(edSplit()); s.id = uid(); s.name = s.name + ' (copy)'; S.settings.splits.push(s); UI.editSplit = s.id; touch('settings'); render(); break; }
     case 'del-split': { const sp = edSplit(); if (UI.confirm !== 'del-split') { UI.confirm = 'del-split'; render(); break; } S.settings.splits = S.settings.splits.filter(s => s.id !== sp.id); if (S.settings.activeSplit === sp.id) { S.settings.activeSplit = S.settings.splits[0].id; S.settings.cycle = 0; } UI.editSplit = null; UI.confirm = null; touch('settings'); toast('Split deleted'); render(); break; }
-    case 'ns-make': { const s = makeSplit(b.dataset.t, ($('#ns-name').value || '').trim()); S.settings.splits.push(s); UI.editSplit = s.id; UI.routineOpen = 0; UI.sheet = null; touch('settings'); UI.tab = 'settings'; render(); toast('Split created. Tap Use when you want to follow it.'); setTimeout(() => { const el = document.getElementById('spedit'); if (el) el.scrollIntoView(); }, 30); break; }
+    case 'ns-make': if (b.dataset.t === 'weekly') { openWeekPlanner(); break; } { const s = makeSplit(b.dataset.t, ($('#ns-name').value || '').trim()); S.settings.splits.push(s); UI.editSplit = s.id; UI.routineOpen = 0; UI.sheet = null; touch('settings'); UI.tab = 'settings'; render(); toast('Split created. Tap Use when you want to follow it.'); setTimeout(() => { const el = document.getElementById('spedit'); if (el) el.scrollIntoView(); }, 30); break; }
     case 'b-part': { const B = UI.build, p = b.dataset.p; B.parts = B.parts.includes(p) ? B.parts.filter(x => x !== p) : [...B.parts, p]; B.picked = autoPick(B.parts); render(); break; }
     case 'b-toggle': { const B = UI.build, id = b.dataset.id; B.picked = B.picked.includes(id) ? B.picked.filter(x => x !== id) : [...B.picked, id]; render(); break; }
     case 'b-start': { const B = UI.build; if (!B.picked.length) { toast('Pick at least one exercise'); break; } startWorkout(null, { key: 'custom', name: partsName(B.parts), parts: B.parts, ex: B.picked.map(defaultsFor) }); break; }
@@ -2741,6 +2776,10 @@ document.addEventListener('click', ev => {
     case 'rk-p': UI.rk.p = b.dataset.v; render(); break;
     case 'rk-m': UI.rk.m = b.dataset.v; render(); break;
     case 'rk-l': UI.rk.l = b.dataset.v; render(); break;
+    case 'week-plan': openWeekPlanner(); break;
+    case 'wk-part': { const i = +b.dataset.i, p = b.dataset.p, W = UI.week; W[i] = W[i].includes(p) ? W[i].filter(x => x !== p) : [...W[i], p]; render(); break; }
+    case 'wk-clear': UI.week[+b.dataset.i] = []; render(); break;
+    case 'wk-save': saveWeekPlan(); break;
     case 'lift-save': { const id = $('#ll-id').value, w = num($('#ll-w').value), r = Math.round(num($('#ll-r').value)); const er = $('#ll-err');
       if (!(w > 0 && w < 2000)) { er.textContent = 'Enter the weight in pounds.'; break; } if (!(r >= 1 && r <= 12)) { er.textContent = 'Reps must be 1 to 12.'; break; }
       const before = strengthOf(S).bests[id] || 0; S.settings.lifts = S.settings.lifts || {}; (S.settings.lifts[id] = S.settings.lifts[id] || []).push({ w, r, t: Date.now() }); touch('settings');
