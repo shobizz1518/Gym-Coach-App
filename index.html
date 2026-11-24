@@ -1637,7 +1637,7 @@ function lockPerson(pid) { delete PINTOK[pid]; saveTok(); const st = STATES[pid]
 function pubSummary(st) {
   const out = { sex: (st.settings.profile || {}).sex || 'm', p: {} };
   for (const [k, , days] of RK_PERIODS) { const s = rkStats(null, days, st, true); out.p[k] = { weight: s.weight, protein: s.protein }; }
-  const sg = strengthOf(st, 0); out.ratio = sg.ratio; out.liftBw = {}; if (sg.bw) for (const [id] of LIFTS) if (sg.bests[id]) out.liftBw[id] = sg.bests[id] / sg.bw;
+  const sg = strengthOf(st, 0); out.ratio = sg.ratio;
   return out;
 }
 // group server (when the app is hosted on its own server): same doc interface as the Claude database
@@ -1952,8 +1952,9 @@ function rkStats(pid, days, stIn, raw) {
   if (!raw && GROUP.on && pid && pid !== curPid() && !(st.meta.priv > 0 && !locked(pid))) {
     const pb = st.pub, pk = (RK_PERIODS.find(x => x[2] === days) || RK_PERIODS[2])[0], pp = pb && pb.p && pb.p[pk];
     res.weight = pp ? pp.weight : null; res.protein = pp ? pp.protein : 0; res.wDelta = null;
-    res.ratio = pb ? pb.ratio : null; res.liftBw = pb && pb.liftBw ? pb.liftBw[(UI.rk && UI.rk.l) || 'bb_bench'] || null : null;
+    res.ratio = pb ? pb.ratio : null; res.liftBw = null;
   }
+  res.self = !pid || pid === curPid();
   return res;
 }
 function rkFmt(m, s) {
@@ -1965,7 +1966,7 @@ function rkFmt(m, s) {
   if (m === 'protein') return v + (v === 1 ? ' day' : ' days');
   if (m === 'total') return v.toLocaleString() + ' lb';
   if (m === 'ratio') return Math.round(v * 100) + '%';
-  if (m === 'lift') return v + ' lb' + (s.liftBw ? ` <small class="muted">(${Math.round(s.liftBw * 100)}% of BW)</small>` : '');
+  if (m === 'lift') return v + ' lb' + (s.liftBw && s.self ? ` <small class="muted">(${Math.round(s.liftBw * 100)}% of BW)</small>` : '');
   return String(v);
 }
 function viewRanking() {
