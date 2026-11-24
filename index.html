@@ -1907,10 +1907,10 @@ function strengthCard() {
   const now = strengthOf(S), prev = strengthOf({ ...S, sessions: Object.fromEntries(Object.entries(S.sessions).filter(([, s]) => s.start < Date.now() - 30 * 864e5)), settings: { ...S.settings, lifts: Object.fromEntries(Object.entries(S.settings.lifts || {}).map(([k, v]) => [k, v.filter(x => (x.t || 0) < Date.now() - 30 * 864e5)])) } });
   const lvl = strengthLevel(now.ratio, S.settings.profile.sex === 'f');
   const rows = LIFTS.map(([id, name]) => { const v = now.bests[id], p = prev.bests[id], d = v && p ? v - p : null;
-    return `<tr><td>${name}${BIG3.includes(id) ? '' : ' <small class="muted">(extra)</small>'}</td><td>${v ? v + ' lb' : '<span class="muted">—</span>'}</td><td>${v && now.bw ? (v / now.bw).toFixed(2) + '×' : ''}</td><td class="${d > 0 ? 'up' : ''}">${d ? (d > 0 ? '+' : '') + d : ''}</td></tr>`; }).join('');
+    return `<tr><td>${name}${BIG3.includes(id) ? '' : ' <small class="muted">(extra)</small>'}</td><td>${v ? v + ' lb' : '<span class="muted">—</span>'}</td><td>${v && now.bw ? Math.round(v / now.bw * 100) + '%' : ''}</td><td class="${d > 0 ? 'up' : ''}">${d ? (d > 0 ? '+' : '') + d : ''}</td></tr>`; }).join('');
   return `<div class="card"><div class="phead"><h3>Strength</h3><button class="btn small ghost" data-act="sheet" data-s="liftlog">+ Log a max</button></div>
-    <div class="stats strstats"><div><b>${now.total ? now.total.toLocaleString() : '—'}</b><small>Big 3 total (lb)</small></div><div><b>${now.ratio ? now.ratio.toFixed(2) + '×' : '—'}</b><small>× body weight</small></div><div><b>${lvl || '—'}</b><small>level (rough guide)</small></div></div>
-    <table class="rktable strtable"><thead><tr><th>Lift</th><th>Best 1RM</th><th>× BW</th><th>30 days</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="stats strstats"><div><b>${now.total ? now.total.toLocaleString() : '—'}</b><small>Big 3 total (lb)</small></div><div><b>${now.ratio ? Math.round(now.ratio * 100) + '%' : '—'}</b><small>strength vs body weight</small></div><div><b>${lvl || '—'}</b><small>level (rough guide)</small></div></div>
+    <table class="rktable strtable"><thead><tr><th>Lift</th><th>Best 1RM</th><th>% of BW</th><th>30 days</th></tr></thead><tbody>${rows}</tbody></table>
     <p class="small muted">Best 1RM is estimated from your heaviest sets (weight × (1 + reps ÷ 30)). It updates from your workouts, or log a quick test set with "Log a max". The Big 3 are bench, squat and deadlift.${now.total && !now.complete ? ' Log all three for a full total.' : ''}</p></div>`;
 }
 
@@ -1918,7 +1918,7 @@ function strengthCard() {
 const RK_PERIODS = [['week', 'This week', 7], ['month', '30 days', 30], ['all', 'All time', 0]];
 const RK_METRICS = [
   ['workouts', 'Workouts', 'workouts done'], ['sets', 'Sets', 'sets logged'], ['volume', 'Volume', 'lb lifted (weight × reps)'],
-  ['days', 'Gym days', 'different days trained'], ['total', 'Big 3 total', 'best bench + squat + deadlift (estimated 1RM)'], ['ratio', 'Strength × BW', 'Big 3 total divided by body weight, fair across sizes'],
+  ['days', 'Gym days', 'different days trained'], ['total', 'Big 3 total', 'best bench + squat + deadlift (estimated 1RM)'], ['ratio', 'Strength vs BW %', 'Big 3 total as a % of body weight, fair across sizes'],
   ['lift', 'Best lift', 'estimated 1-rep max on one lift'], ['strength', 'Strength gain', 'average strength gain on repeated exercises'],
   ['weight', 'Weight goal', 'body weight moved toward their goal'], ['protein', 'Protein', 'days protein target was hit'],
 ];
@@ -1964,8 +1964,8 @@ function rkFmt(m, s) {
   if (m === 'weight') return (v >= 0 ? '+' : '') + v.toFixed(1) + '%' + (s.wDelta != null ? ` <small class="muted">(${s.wDelta > 0 ? '+' : ''}${s.wDelta.toFixed(1)} lb)</small>` : '');
   if (m === 'protein') return v + (v === 1 ? ' day' : ' days');
   if (m === 'total') return v.toLocaleString() + ' lb';
-  if (m === 'ratio') return v.toFixed(2) + '×';
-  if (m === 'lift') return v + ' lb' + (s.liftBw ? ` <small class="muted">(${s.liftBw.toFixed(2)}× BW)</small>` : '');
+  if (m === 'ratio') return Math.round(v * 100) + '%';
+  if (m === 'lift') return v + ' lb' + (s.liftBw ? ` <small class="muted">(${Math.round(s.liftBw * 100)}% of BW)</small>` : '');
   return String(v);
 }
 function viewRanking() {
