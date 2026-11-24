@@ -1960,14 +1960,14 @@ function viewHome() {
   h += `<div class="cycle" style="grid-template-columns:repeat(${Math.min(nd, 7)},1fr)">${routine().map((d, i) => `<button class="cday ${i === c ? 'on' : ''} ${d.key === 'rest' ? 'rest' : ''}" data-act="set-cycle" data-i="${i}"><small>${activeSplit().weekly ? WEEKDAYS[i].slice(0, 3) + (i === todayIdx() ? ' · today' : '') : 'Day ' + (i + 1)}</small>${esc(d.name)}</button>`).join('')}</div>`;
   if (S.active) h += '';
   if (day.key === 'rest') {
-    h += `<div class="card hero rest"><div class="eyebrow">Day ${c + 1} of ${routine().length} · Up next</div><h1>Rest day</h1>
+    h += `<div class="card hero rest"><div class="eyebrow">${activeSplit().weekly ? WEEKDAYS[c] + (c === todayIdx() ? " · Today" : "") : `Day ${c + 1} of ${routine().length} · Up next`}</div><h1>Rest day</h1>
       <p>Recovery is when you get stronger. Easy ideas for today:</p>
       <ul class="ticks"><li>30–45 min walk, or easy bike</li><li>5–10 min of stretching (hips, chest, hamstrings)</li><li>Hit your protein target and drink plenty of water</li><li>Aim for 7–9 hours of sleep</li></ul>
       <button class="btn primary big" data-act="rest-done">Done resting, move to ${esc(routine()[(c + 1) % routine().length].name)}</button>
       <button class="btn ghost" data-act="set-cycle" data-i="${(c + 1) % routine().length}">Train anyway (skip to ${esc(routine()[(c + 1) % routine().length].name)})</button></div>`;
   } else {
     const mins = dayMins(day);
-    h += `<div class="card hero"><div class="eyebrow">Day ${c + 1} of ${routine().length} · Up next</div><h1>${esc(day.name)} day</h1><p class="muted">${esc(dayFocus(day))} · ${day.ex.length} exercises · about ${mins} min</p>
+    h += `<div class="card hero"><div class="eyebrow">${activeSplit().weekly ? WEEKDAYS[c] + (c === todayIdx() ? " · Today" : "") : `Day ${c + 1} of ${routine().length} · Up next`}</div><h1>${esc(day.name)} day</h1><p class="muted">${esc(dayFocus(day))} · ${day.ex.length} exercises · about ${mins} min</p>
       <div class="lenctl"><button class="lenbtn" data-act="len-ex" data-d="-1" ${day.ex.length <= 1 ? 'disabled' : ''} aria-label="Remove an exercise">−</button><div class="lenmid"><b>${day.ex.length} exercise${day.ex.length === 1 ? '' : 's'}</b><small>about ${mins} min</small></div><button class="lenbtn" data-act="len-ex" data-d="1" aria-label="Add an exercise">+</button></div>
       <div class="lenchips">${[30, 45, 60, 75, 90].map(m => `<button class="pchip ${Math.abs(mins - m) <= 7 ? 'on' : ''}" data-act="len-min" data-m="${m}">${m} min</button>`).join('')}</div>
       <button class="btn primary big" data-act="start" data-i="${c}">▶ Start ${esc(day.name)} workout</button></div>`;
