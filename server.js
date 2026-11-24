@@ -2,6 +2,7 @@
 // Storage: Postgres when DATABASE_URL is set, otherwise a JSON file (fine for testing; Render's free disk is wiped on redeploy).
 // Optional GROUP_CODE env var: when set, a phone must enter it once before it can read or save anything.
 const http = require('http');
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
@@ -9,6 +10,7 @@ const PORT = process.env.PORT || 3000;
 const CODE = (process.env.GROUP_CODE || '').trim();
 const ROOT = __dirname;
 const MAX_BODY = 4 * 1024 * 1024;
+const ADMIN_PIN = (process.env.ADMIN_PIN || '').trim();
 
 // ---------- storage ----------
 let store;
@@ -39,16 +41,62 @@ if (process.env.DATABASE_URL) {
   };
 }
 
+// ---------- per-person PINs ----------
+// Private docs (a person's settings, which hold age/height/weight/targets/weigh-ins, and their food logs m_*) are only
+// sent or accepted with that person's token. PINs are stored as salted scrypt hashes in the hidden _pins doc.
+function splitId(id) { const m = id.match(/^pr_(.+?)__(.+)$/); return m ? { pid: m[1], key: m[2] } : { pid: 'main', key: id }; }
+const isPrivate = id => { if (id === 'profiles') return false; const { key } = splitId(id); return key === 'priv' || key.startsWith('m_'); };
+// personal fields never live in the shared settings doc (older app versions put them there)
+const PRIV_KEYS = ['profile', 'targets', 'weighIns', 'autoT', 'tnote', 'foods'];
+const isSettings = id => id !== 'profiles' && splitId(id).key === 'settings';
+const stripPriv = b => b && typeof b === 'object' ? Object.fromEntries(Object.entries(b).filter(([k]) => !PRIV_KEYS.includes(k))) : b;
+const privOf = b => b && typeof b === 'object' ? Object.fromEntries(Object.entries(b).filter(([k]) => PRIV_KEYS.includes(k))) : {};
+const privIdFor = id => { const { pid } = splitId(id); return pid === 'main' ? 'priv' : `pr_${pid}__priv`; };
+async function migratePrivate() {
+  for (const d of await store.all()) {
+    if (!isSettings(d.id) || !d.body) continue;
+    const pv = privOf(d.body); if (!Object.keys(pv).length) continue;
+    const pid = privIdFor(d.id); if (!(await store.get(pid))) await store.put(pid, d.u, pv);
+    await store.put(d.id, d.u, stripPriv(d.body));
+  }
+}
+migratePrivate().then(() => console.log('private fields checked')).catch(e => console.error('migrate', e));
+let SECRET = null;
+async function secret() {
+  if (SECRET) return SECRET;
+  const d = await store.get('_secret');
+  if (d && d.body && d.body.k) SECRET = d.body.k;
+  else { SECRET = crypto.randomBytes(32).toString('hex'); await store.put('_secret', Date.now(), { k: SECRET }); }
+  return SECRET;
+}
+async function pins() { const d = await store.get('_pins'); return (d && d.body) || {}; }
+const hashPin = (pin, salt) => crypto.scryptSync(String(pin), salt, 32).toString('hex');
+async function tokenFor(pid, rec) { return crypto.createHmac('sha256', await secret()).update(pid + ':' + rec.hash).digest('hex'); }
+function readTokens(req) { try { const t = JSON.parse(decodeURIComponent(req.headers['x-pins'] || '') || '{}'); return t && typeof t === 'object' ? t : {}; } catch (e) { return {}; } }
+async function canAccess(pid, tokens, P) {
+  const rec = P[pid]; if (!rec) return true; // no PIN set yet
+  const t = tokens[pid]; if (typeof t !== 'string') return false;
+  const good = await tokenFor(pid, rec);
+  return t.length === good.length && crypto.timingSafeEqual(Buffer.from(t), Buffer.from(good));
+}
+const FAILS = new Map(); // pid -> { n, until }
+function blocked(pid) { const f = FAILS.get(pid); return f && f.until > Date.now(); }
+function failed(pid) { const f = FAILS.get(pid) || { n: 0, until: 0 }; f.n++; if (f.n >= 5) { f.until = Date.now() + 5 * 60e3; f.n = 0; } FAILS.set(pid, f); }
+const validPin = p => typeof p === 'string' && /^\d{4}$/.test(p);
+
 // profiles are merged rather than overwritten, so two phones adding people at once both keep theirs
-async function putProfiles(u, body) {
-  const cur = await store.get('profiles');
-  const deleted = [...new Set([...((cur && cur.body && cur.body.deleted) || []), ...((body && body.deleted) || [])].map(String))].slice(-500);
+async function putProfiles(u, body, tokens) {
+  const cur = await store.get('profiles'), P = await pins();
+  const asked = ((body && body.deleted) || []).map(String), okDel = [];
+  for (const pid of asked) if (await canAccess(pid, tokens, P)) okDel.push(pid); // can't delete someone else's PIN-protected person
+  const deleted = [...new Set([...((cur && cur.body && cur.body.deleted) || []), ...okDel].map(String))].slice(-500);
   const byId = new Map();
   for (const p of ((cur && cur.body && cur.body.list) || [])) if (p && p.id) byId.set(String(p.id), p);
   for (const p of ((body && body.list) || [])) if (p && p.id) byId.set(String(p.id), { id: String(p.id), name: String(p.name || 'Me').slice(0, 30) });
   const list = [...byId.values()].filter(p => !deleted.includes(p.id));
   const nu = Math.max(Number(u) || 0, (cur && cur.u) || 0, Date.now());
   await store.put('profiles', nu, { list, deleted });
+  if (okDel.length) { const P2 = await pins(); okDel.forEach(p => delete P2[p]); await store.put('_pins', Date.now(), P2); }
   return { u: nu, body: { list, deleted } };
 }
 
@@ -76,14 +124,39 @@ http.createServer(async (req, res) => {
     if (p === '/api/health') return send(res, 200, { ok: true, store: store.kind, code: !!CODE });
     if (p.startsWith('/api/')) {
       if (CODE && (req.headers['x-group-code'] || '').trim().toLowerCase() !== CODE.toLowerCase()) return send(res, 401, { error: 'need_code' });
-      if (p === '/api/docs' && req.method === 'GET') return send(res, 200, { docs: await store.all() });
+      const tokens = readTokens(req);
+      if (p === '/api/docs' && req.method === 'GET') {
+        const P = await pins(), all = await store.all(), out = [];
+        for (const d0 of all) { const d = isSettings(d0.id) ? { ...d0, body: stripPriv(d0.body) } : d0; if (d.id.startsWith('_')) continue; if (isPrivate(d.id) && !(await canAccess(splitId(d.id).pid, tokens, P))) continue; out.push(d); }
+        return send(res, 200, { docs: out, pins: Object.keys(P) });
+      }
+      if (p === '/api/pins' && req.method === 'GET') return send(res, 200, { pins: Object.keys(await pins()) });
+      const pm = p.match(/^\/api\/(unlock|pin)\/([A-Za-z0-9_\-]{1,60})$/);
+      if (pm && req.method === 'POST') {
+        const [, what, pid] = pm, d = await readBody(req), P = await pins(), rec = P[pid];
+        if (blocked(pid)) return send(res, 429, { error: 'too_many', wait: Math.ceil((FAILS.get(pid).until - Date.now()) / 1000) });
+        if (what === 'unlock') {
+          if (!rec) return send(res, 200, { token: null, none: true });
+          const ok = (validPin(d.pin) && hashPin(d.pin, rec.salt) === rec.hash) || (ADMIN_PIN && String(d.pin) === ADMIN_PIN);
+          if (!ok) { failed(pid); return send(res, 403, { error: 'wrong_pin' }); }
+          FAILS.delete(pid); return send(res, 200, { token: await tokenFor(pid, rec) });
+        }
+        // set or change a PIN: allowed when none is set, or with that person's token, old PIN, or the admin PIN
+        if (!validPin(d.pin)) return send(res, 400, { error: 'pin_format' });
+        if (rec && !(await canAccess(pid, tokens, P)) && !(validPin(d.old) && hashPin(d.old, rec.salt) === rec.hash) && !(ADMIN_PIN && String(d.old) === ADMIN_PIN)) { failed(pid); return send(res, 403, { error: 'wrong_pin' }); }
+        const salt = crypto.randomBytes(16).toString('hex'), nrec = { salt, hash: hashPin(d.pin, salt) };
+        P[pid] = nrec; await store.put('_pins', Date.now(), P);
+        return send(res, 200, { token: await tokenFor(pid, nrec) });
+      }
       const m = p.match(/^\/api\/docs\/([^/]+)$/);
       if (m) {
         const id = decodeURIComponent(m[1]);
-        if (!validId(id)) return send(res, 400, { error: 'bad_id' });
+        if (!validId(id) || id.startsWith('_')) return send(res, 400, { error: 'bad_id' });
+        if (isPrivate(id) && !(await canAccess(splitId(id).pid, tokens, await pins()))) return send(res, 403, { error: 'locked' });
         if (req.method === 'PUT') {
           const d = await readBody(req);
-          if (id === 'profiles') return send(res, 200, await putProfiles(d.u, d.body));
+          if (id === 'profiles') return send(res, 200, await putProfiles(d.u, d.body, tokens));
+          if (isSettings(id) && d.body) { const pv = privOf(d.body); if (Object.keys(pv).length && await canAccess(splitId(id).pid, tokens, await pins())) { const pidDoc = privIdFor(id), c = await store.get(pidDoc); if (!c) await store.put(pidDoc, Number(d.u) || Date.now(), pv); } d.body = stripPriv(d.body); }
           const cur = await store.get(id);
           const u = Number(d.u) || Date.now();
           if (cur && cur.u > u) return send(res, 200, { u: cur.u, body: cur.body, stale: true });

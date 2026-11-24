@@ -178,7 +178,7 @@ option{background:#141027;color:#fff}
 .rktop b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rkval{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
 .rkbar{height:6px;border-radius:4px;background:rgba(255,255,255,.07);margin-top:6px;overflow:hidden}.rkbar i{display:block;height:100%;border-radius:4px;background:var(--grad)}.rkbar i.neg{background:#64748b}
 .scroll{overflow-x:auto}.rktable{width:100%;border-collapse:collapse;font-size:13px}.rktable th,.rktable td{padding:8px 6px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}.rktable th:first-child,.rktable td:first-child{text-align:left;color:var(--mut)}
-.rktable td.best{color:#f9a8d4;font-weight:800}.whoami{margin:10px 0 14px}.liftseg button{font-size:12px;padding:7px 2px}.strstats{margin:4px 0 8px;padding:0;background:none;border:0}.strtable td.up{color:#86efac;font-weight:700}.wkday{padding:10px 0;border-bottom:1px solid var(--line)}.wkday.today .wkhead b{color:#f0abfc}.wkhead{display:flex;align-items:center;gap:8px;margin-bottom:6px}.wkhead small{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wkday .parts .pchip{font-size:12px;padding:5px 9px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rktable td.best{color:#f9a8d4;font-weight:800}.whoami{margin:10px 0 14px}.liftseg button{font-size:12px;padding:7px 2px}.strstats{margin:4px 0 8px;padding:0;background:none;border:0}.strtable td.up{color:#86efac;font-weight:700}.wkday{padding:10px 0;border-bottom:1px solid var(--line)}.wkday.today .wkhead b{color:#f0abfc}.wkhead{display:flex;align-items:center;gap:8px;margin-bottom:6px}.wkhead small{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wkday .parts .pchip{font-size:12px;padding:5px 9px}.pinpanel h3{font-size:19px}.pindots{display:flex;justify-content:center;gap:16px;margin:18px 0 6px}.pindots i{width:16px;height:16px;border-radius:50%;border:2px solid #a78bfa}.pindots i.on{background:var(--grad);border-color:transparent;box-shadow:0 0 10px rgba(236,72,153,.6)}.pindots.shake{animation:shk .35s}@keyframes shk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}.pinerr{text-align:center;min-height:18px}.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:300px;margin:8px auto}.pk{height:62px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;font-size:24px;font-weight:700;font-family:inherit}.pk.small{font-size:12px;color:var(--mut)}.pk:active{background:var(--grad)}.center{text-align:center}.lockcard{text-align:center}.lockicon{font-size:40px;margin:6px 0}.lockcard .btn{margin-top:8px;width:100%}.pinrow{display:flex;gap:8px;margin-top:10px}.pinrow .btn{flex:1}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 </style>
 </head>
 <body>
@@ -1562,17 +1562,24 @@ function saveState(pid) { try { localStorage.setItem(lsKey(pid), JSON.stringify(
 function saveWarn() { if (Sync.col || saveWarn.done) return; saveWarn.done = true; setTimeout(() => { if (!Sync.col) toast('This device isn’t keeping data. Sign in to Claude so your info is saved to your account.'); }, 3000); }
 function saveLocal() { saveState(curPid()); }
 function saveProfiles() { try { localStorage.setItem(PROF_KEY, JSON.stringify(PROFILES)); } catch (e) { saveWarn(); } }
+// personal info lives in its own 'priv' doc (PIN-protected on the group server); everything else in settings stays shared
+const PRIV_KEYS = ['profile', 'targets', 'weighIns', 'autoT', 'tnote', 'foods'];
+const pick = (o, ks) => Object.fromEntries(ks.filter(k => o[k] !== undefined).map(k => [k, o[k]]));
 function docBody(st, key) {
-  if (key === 'settings') return st.settings;
+  if (key === 'settings') return Object.fromEntries(Object.entries(st.settings).filter(([k]) => !PRIV_KEYS.includes(k)));
+  if (key === 'priv') return pick(st.settings, PRIV_KEYS);
+  if (key === 'pub') return pubSummary(st);
   if (key === 'active') return st.active ? { session: st.active } : { session: null };
   if (key.startsWith('w_')) return st.sessions[key.slice(2)] || null;
   if (key.startsWith('m_')) return st.macros[key.slice(2)] || null;
 }
 function touch(key, pid = curPid()) {
-  const st = getState(pid);
-  st.meta[key] = Date.now();
+  const st = getState(pid), now = Date.now();
+  st.meta[key] = now;
+  const also = key === 'settings' ? ['priv', 'pub'] : key.startsWith('m_') ? ['pub'] : [];
+  for (const k of also) st.meta[k] = now;
   saveState(pid);
-  schedulePush(pfx(pid) + key);
+  for (const k of [key, ...also]) schedulePush(pfx(pid) + k);
 }
 function touchProfiles() { PROFILES.u = Date.now(); saveProfiles(); schedulePush('profiles'); }
 function schedulePush(full) {
@@ -1591,6 +1598,8 @@ async function pushDoc(full) {
   Sync.busy[full] = true;
   try {
     const { pid, key } = splitKey(full);
+    if (pid != null && locked(pid) && isPrivKey(key)) { Sync.busy[full] = false; return; }
+    if (pid != null && key === 'pub') getState(pid).pub = pubSummary(getState(pid));
     const ref = Sync.col.doc(full);
     if (pid == null) await ref.set({ u: PROFILES.u || Date.now(), body: { list: clone(PROFILES.list), deleted: clone(PROFILES.deleted || []) } });
     else {
@@ -1600,7 +1609,7 @@ async function pushDoc(full) {
     }
     setSync(GROUP.on ? 'group' : 'account');
   } catch (e) {
-    if (e && e.code === 'need_code') { Sync.busy[full] = false; return; }
+    if (e && (e.code === 'need_code' || e.code === 'locked')) { Sync.busy[full] = false; return; }
     if (e && e.code === 'quota_exceeded') toast('Account storage is full. Your data is still saved on this device.');
     else if (e && (e.code === 'invalid_argument' || e.code === 'revoked' || e.code === 'not_granted')) { Sync.col = null; setSync('device'); }
     else { setTimeout(() => pushDoc(full), 2500 + Math.random() * 2000); }
@@ -1609,14 +1618,35 @@ async function pushDoc(full) {
   if (Sync.again[full]) { Sync.again[full] = false; pushDoc(full); }
 }
 function setSync(s) { Sync.status = s; const el = $('#syncdot'); if (el) { el.className = 'syncdot ' + s; el.title = s === 'account' ? 'Saved to your Claude account' : s === 'group' ? 'Shared with your group' : 'Saved on this device'; } }
-function stateKeys(st) { return ['settings', 'active', ...Object.keys(st.sessions).map(k => 'w_' + k), ...Object.keys(st.macros).map(k => 'm_' + k)]; }
+function stateKeys(st) { return ['settings', 'priv', 'pub', 'active', ...Object.keys(st.sessions).map(k => 'w_' + k), ...Object.keys(st.macros).map(k => 'm_' + k)]; }
+// ---------- per-person PIN (group server only) ----------
+const PINTOK = (() => { try { return JSON.parse(sessionStorage.getItem('gymapp.tok') || '{}') || {}; } catch (e) { return {}; } })();
+function saveTok() { try { sessionStorage.setItem('gymapp.tok', JSON.stringify(PINTOK)); } catch (e) { } }
+const isPrivKey = key => key === 'priv' || key.startsWith('m_');
+const locked = pid => GROUP.on && GROUP.pins.has(pid) && !PINTOK[pid];
+const needsPin = pid => GROUP.on && !GROUP.pins.has(pid);
+async function pinCall(what, pid, body) {
+  const r = await fetch(`api/${what}/${encodeURIComponent(pid)}`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Pins': encodeURIComponent(JSON.stringify(PINTOK)), ...(GROUP.code ? { 'X-Group-Code': GROUP.code } : {}) }, body: JSON.stringify(body) });
+  let j = {}; try { j = await r.json(); } catch (e) { }
+  if (!r.ok) throw { code: j.error || 'http_' + r.status, wait: j.wait };
+  if (j.token) { PINTOK[pid] = j.token; saveTok(); GROUP.pins.add(pid); }
+  return j;
+}
+function lockPerson(pid) { delete PINTOK[pid]; saveTok(); const st = STATES[pid]; if (st) { st.macros = {}; Object.assign(st.settings, pick(defaultState().settings, PRIV_KEYS)); st.meta.priv = 0; Object.keys(st.meta).forEach(k => { if (k.startsWith('m_')) delete st.meta[k]; }); saveState(pid); } }
+// a summary other people can see in Ranking without seeing weight, age or food
+function pubSummary(st) {
+  const out = { sex: (st.settings.profile || {}).sex || 'm', p: {} };
+  for (const [k, , days] of RK_PERIODS) { const s = rkStats(null, days, st, true); out.p[k] = { weight: s.weight, protein: s.protein }; }
+  const sg = strengthOf(st, 0); out.ratio = sg.ratio; out.liftBw = {}; if (sg.bw) for (const [id] of LIFTS) if (sg.bests[id]) out.liftBw[id] = sg.bests[id] / sg.bw;
+  return out;
+}
 // group server (when the app is hosted on its own server): same doc interface as the Claude database
-const GROUP = { on: false, code: (() => { try { return localStorage.getItem('gymapp.code') || ''; } catch (e) { return ''; } })() };
+const GROUP = { on: false, pins: new Set(), code: (() => { try { return localStorage.getItem('gymapp.code') || ''; } catch (e) { return ''; } })() };
 function restCol(base) {
-  const H = () => Object.assign({ 'Content-Type': 'application/json' }, GROUP.code ? { 'X-Group-Code': GROUP.code } : {});
-  const chk = async r => { if (r.status === 401) throw { code: 'need_code' }; if (!r.ok) throw { code: 'http_' + r.status }; return r.json(); };
+  const H = () => Object.assign({ 'Content-Type': 'application/json', 'X-Pins': encodeURIComponent(JSON.stringify(PINTOK)) }, GROUP.code ? { 'X-Group-Code': GROUP.code } : {});
+  const chk = async r => { if (r.status === 401) throw { code: 'need_code' }; if (r.status === 403) throw { code: 'locked' }; if (!r.ok) throw { code: 'http_' + r.status }; return r.json(); };
   return {
-    async get() { const j = await chk(await fetch(base + '/docs', { headers: H(), cache: 'no-store' })); return { docs: (j.docs || []).map(d => ({ id: d.id, data: () => ({ u: d.u, body: d.body }) })) }; },
+    async get() { const j = await chk(await fetch(base + '/docs', { headers: H(), cache: 'no-store' })); if (Array.isArray(j.pins)) GROUP.pins = new Set(j.pins); return { docs: (j.docs || []).map(d => ({ id: d.id, data: () => ({ u: d.u, body: d.body }) })) }; },
     doc(id) {
       const url = base + '/docs/' + encodeURIComponent(id);
       return { async set(v) { return chk(await fetch(url, { method: 'PUT', headers: H(), body: JSON.stringify(v) })); }, async delete() { return chk(await fetch(url, { method: 'DELETE', headers: H() })); } };
@@ -1677,13 +1707,16 @@ async function initSync() {
     Sync.col = col;
     if (profPush) pushDoc('profiles');
     for (const p of PROFILES.list) {
-      const st = getState(p.id);
-      for (const k of stateKeys(st)) if (!fresh.has(pfx(p.id) + k) && st.meta[k]) pushDoc(pfx(p.id) + k);
+      const st = getState(p.id), lk = locked(p.id);
+      for (const k of stateKeys(st)) if (!fresh.has(pfx(p.id) + k) && st.meta[k] && !(lk && isPrivKey(k)) && !(GROUP.on && k === 'pub' && p.id !== curPid())) pushDoc(pfx(p.id) + k);
       if (!st.meta.settings) { st.meta.settings = Date.now(); pushDoc(pfx(p.id) + 'settings'); }
+      if (!st.meta.priv && !lk && (!GROUP.on || p.id === curPid())) { st.meta.priv = st.meta.pub = Date.now(); pushDoc(pfx(p.id) + 'priv'); pushDoc(pfx(p.id) + 'pub'); }
     }
+    if (GROUP.on && !locked(curPid())) { const st = getState(curPid()); if (!fresh.has(pfx(curPid()) + 'pub') || !st.pub) { st.meta.pub = Date.now(); pushDoc(pfx(curPid()) + 'pub'); } }
     setSync(GROUP.on ? 'group' : 'account');
     if (GROUP.on && !initSync.timer) { initSync.timer = setInterval(() => { if (!document.hidden) initSync(); }, 30000); document.addEventListener('visibilitychange', () => { if (!document.hidden) initSync(); }); }
     if (GROUP.on && !localGet('gymapp.me') && !UI.sheet) { UI.sheet = 'whoami'; changed = true; }
+    else if (GROUP.on && !UI.sheet && (locked(curPid()) || needsPin(curPid()))) { openPin(curPid()); changed = true; }
     if (changed) { S = getState(curPid()); render(); }
   } catch (e) {
     if (e && e.code === 'need_code') { GROUP.on = true; if (UI.sheet !== 'groupcode') { UI.sheet = 'groupcode'; render(); } return; }
@@ -1693,7 +1726,9 @@ async function initSync() {
 function localGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function localSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
 function applyDoc(st, key, body) {
-  if (key === 'settings' && body) { st.settings = Object.assign(defaultState().settings, body); migrate(st.settings); }
+  if (key === 'settings' && body) { const keep = pick(st.settings || {}, PRIV_KEYS); st.settings = Object.assign(defaultState().settings, keep, body); migrate(st.settings); }
+  else if (key === 'priv' && body) { Object.assign(st.settings, pick(body, PRIV_KEYS)); }
+  else if (key === 'pub') st.pub = body || null;
   else if (key === 'active') st.active = body ? body.session : null;
   else if (key.startsWith('w_')) { if (body) st.sessions[key.slice(2)] = body; }
   else if (key.startsWith('m_')) { if (body) st.macros[key.slice(2)] = body; }
@@ -1825,7 +1860,7 @@ function render() {
   document.querySelectorAll('.tabbar button').forEach(b => b.classList.toggle('on', b.dataset.tab === UI.tab));
   const main = $('#main');
   let html;
-  try { html = UI.tab === 'train' ? (S.active ? viewWorkout() : viewHome()) : UI.tab === 'progress' ? viewProgress() : UI.tab === 'macros' ? viewMacros() : UI.tab === 'library' ? viewLibrary() : UI.tab === 'ranking' ? viewRanking() : viewSettings();
+  try { html = GROUP.on && locked(curPid()) && !['ranking', 'library'].includes(UI.tab) ? lockCard() : UI.tab === 'train' ? (S.active ? viewWorkout() : viewHome()) : UI.tab === 'progress' ? viewProgress() : UI.tab === 'macros' ? viewMacros() : UI.tab === 'library' ? viewLibrary() : UI.tab === 'ranking' ? viewRanking() : viewSettings();
   } catch (e) { console.error(e); html = `<div class="card"><h3>Something went wrong</h3><p class="small muted">${esc(errText(e))}</p><button class="btn ghost" data-act="tab" data-tab="settings">Open Settings</button></div>`; }
   main.innerHTML = html;
   // keep anything typed in an open form when the screen refreshes underneath it
@@ -1887,8 +1922,8 @@ const RK_METRICS = [
   ['lift', 'Best lift', 'estimated 1-rep max on one lift'], ['strength', 'Strength gain', 'average strength gain on repeated exercises'],
   ['weight', 'Weight goal', 'body weight moved toward their goal'], ['protein', 'Protein', 'days protein target was hit'],
 ];
-function rkStats(pid, days) {
-  const st = getState(pid), since = days ? Date.now() - days * 864e5 : 0, sinceKey = days ? dateKey(new Date(since)) : '0000';
+function rkStats(pid, days, stIn, raw) {
+  const st = stIn || getState(pid), since = days ? Date.now() - days * 864e5 : 0, sinceKey = days ? dateKey(new Date(since)) : '0000';
   const ss = Object.values(st.sessions || {}).filter(s => s && s.start >= since && Array.isArray(s.ex));
   let sets = 0, volume = 0; const dset = new Set();
   for (const s of ss) { dset.add(dateKey(new Date(s.start))); for (const e of s.ex) for (const z of (e.sets || [])) { sets++; volume += (+z.w || 0) * (+z.r || 0); } }
@@ -1912,7 +1947,14 @@ function rkStats(pid, days) {
   if (tp) for (const [k, d] of Object.entries(st.macros || {})) { if (k < sinceKey || !d || !d.entries) continue; const p = d.entries.reduce((x, e) => x + (+e.p || 0), 0); if (p >= tp * 0.9) protein++; }
   const sg = strengthOf(st, 0); // strength is each person's best ever, whatever the period
   const lift = sg.bests[(UI.rk && UI.rk.l) || 'bb_bench'] || null;
-  return { workouts: ss.length, sets, volume: Math.round(volume), days: dset.size, strength, weight, wDelta, protein, total: sg.total, ratio: sg.ratio, lift, liftBw: lift && sg.bw ? lift / sg.bw : null };
+  const res = { workouts: ss.length, sets, volume: Math.round(volume), days: dset.size, strength, weight, wDelta, protein, total: sg.total, ratio: sg.ratio, lift, liftBw: lift && sg.bw ? lift / sg.bw : null };
+  // other people's personal numbers come from their shared summary, never from their private data
+  if (!raw && GROUP.on && pid && pid !== curPid() && !(st.meta.priv > 0 && !locked(pid))) {
+    const pb = st.pub, pk = (RK_PERIODS.find(x => x[2] === days) || RK_PERIODS[2])[0], pp = pb && pb.p && pb.p[pk];
+    res.weight = pp ? pp.weight : null; res.protein = pp ? pp.protein : 0; res.wDelta = null;
+    res.ratio = pb ? pb.ratio : null; res.liftBw = pb && pb.liftBw ? pb.liftBw[(UI.rk && UI.rk.l) || 'bb_bench'] || null : null;
+  }
+  return res;
 }
 function rkFmt(m, s) {
   const v = s[m];
@@ -2020,6 +2062,7 @@ function viewWorkout() {
 
 function viewSheet() {
   const a = S.active;
+  if (UI.sheet === 'pin' && UI.pin) return viewPin();
   if (UI.sheet === 'week') return viewWeekPlanner();
   if (UI.sheet === 'liftlog') {
     return `<div class="panel"><div class="phead"><h3>Log a max</h3><button class="x" data-act="close">✕</button></div>
@@ -2464,6 +2507,7 @@ function switchProfile(pid) {
   PROFILES.current = pid; saveProfiles();
   S = getState(pid);
   UI.sheet = null; UI.editSplit = null; UI.routineOpen = null; UI.build = null; UI.confirm = null; UI.progEx = null;
+  if (GROUP.on && (locked(pid) || needsPin(pid))) return openPin(pid);
   render(); window.scrollTo(0, 0);
 }
 function eqAllowed(id) {
@@ -2515,7 +2559,8 @@ function viewProfiles() {
   return `<div class="panel"><div class="phead"><h3>Who’s training?</h3><button class="x" data-act="close">✕</button></div>
     ${PROFILES.list.map(p => { const st = getState(p.id); const n = Object.keys(st.sessions).length; return `<div class="splitrow"><button class="row" data-act="switch-prof" data-id="${p.id}"><span class="avatar">${esc((p.name || '?')[0].toUpperCase())}</span><span class="rowtxt"><b>${esc(p.name)}</b><small class="muted">${n} workout${n === 1 ? '' : 's'} logged · ${esc(activeSplitOf(st).name)}</small></span></button>${p.id === PROFILES.current ? '<span class="badge">Active</span>' : (p.id !== 'main' ? `<button class="btn small ${UI.confirm === 'delprof:' + p.id ? 'danger' : 'ghost dangertxt'}" data-act="del-prof" data-id="${p.id}">${UI.confirm === 'delprof:' + p.id ? 'Tap again' : 'Delete'}</button>` : '')}</div>`; }).join('')}
     <button class="btn primary big" data-act="sheet" data-s="newprofile">+ Add user</button>
-    <p class="small muted">Each person gets their own stats, macro targets, food log, workouts and splits.</p></div>`;
+    ${GROUP.on && !locked(curPid()) && GROUP.pins.has(curPid()) ? `<div class="pinrow"><button class="btn ghost" data-act="lock-now">🔒 Lock ${esc(curProfile().name)}</button><button class="btn ghost" data-act="pin-change">Change PIN</button></div>` : ''}
+    <p class="small muted">Each person gets their own stats, macro targets, food log, workouts and splits.${GROUP.on ? ' Food, weight, age and calorie targets are behind each person’s PIN.' : ''}</p></div>`;
 }
 function activeSplitOf(st) { return st.settings.splits.find(s => s.id === st.settings.activeSplit) || st.settings.splits[0]; }
 function viewNewProfile() {
@@ -2636,6 +2681,46 @@ function saveWeekPlan() {
   S.settings.activeSplit = ws.id; S.settings.cycle = todayIdx(); S.settings.weekSeen = dateKey();
   UI.sheet = null; UI.week = null; touch('settings'); UI.tab = 'train'; render(); window.scrollTo(0, 0);
   toast(`Saved. ${WEEKDAYS[todayIdx()]}: ${days[todayIdx()].key === 'rest' ? 'rest day' : days[todayIdx()].name}`);
+}
+
+// ---------- PIN screens ----------
+function openPin(pid, mode) { UI.pin = { pid, mode: mode || (GROUP.pins.has(pid) && !PINTOK[pid] ? 'unlock' : GROUP.pins.has(pid) ? 'change' : 'set'), v: '', first: '', err: '' }; UI.sheet = 'pin'; render(); }
+function viewPin() {
+  const P = UI.pin, who = PROFILES.list.find(q => q.id === P.pid) || { name: '?' };
+  const title = P.mode === 'unlock' ? `Enter ${esc(who.name)}’s PIN` : P.first ? 'Enter it again to confirm' : P.mode === 'change' ? 'Choose a new 4-digit PIN' : `Set a 4-digit PIN for ${esc(who.name)}`;
+  const sub = P.mode === 'unlock' ? 'Your food, weight, age and calorie targets are behind your PIN. Workouts and rankings stay shared.' : 'The PIN protects food, weight, age and calorie targets. Workouts and rankings stay shared with everyone.';
+  const dots = [0, 1, 2, 3].map(i => `<i class="${i < P.v.length ? 'on' : ''}"></i>`).join('');
+  const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'sw', '0', 'del'];
+  return `<div class="panel pinpanel"><div class="phead"><h3>${title}</h3>${P.mode !== 'set' ? '<button class="x" data-act="close">✕</button>' : ''}</div>
+    <p class="small muted">${sub}</p><div class="pindots ${P.err ? 'shake' : ''}">${dots}</div><div class="formerr pinerr">${esc(P.err)}</div>
+    <div class="pinpad">${keys.map(k => k === 'sw' ? `<button class="pk small" data-act="sheet" data-s="profiles">Switch<br>person</button>` : k === 'del' ? `<button class="pk small" data-act="pin-del">⌫</button>` : `<button class="pk" data-act="pin-key" data-k="${k}">${k}</button>`).join('')}</div>
+    ${P.mode === 'unlock' ? '<p class="small muted center">Forgot it? Ask the group admin to unlock it with the admin PIN.</p>' : ''}</div>`;
+}
+async function pinKey(k) {
+  const P = UI.pin; if (!P || P.busy) return;
+  if (P.v.length < 4) P.v += k; P.err = '';
+  if (P.v.length < 4) return render();
+  render();
+  if (P.mode !== 'unlock' && !P.first) { P.first = P.v; P.v = ''; return setTimeout(render, 120); }
+  if (P.mode !== 'unlock' && P.first !== P.v) { P.first = ''; P.v = ''; P.err = 'Those didn’t match. Start again.'; return render(); }
+  P.busy = true;
+  try {
+    if (P.mode === 'unlock') await pinCall('unlock', P.pid, { pin: P.v });
+    else await pinCall('pin', P.pid, { pin: P.v });
+    const done = P.mode; UI.pin = null; UI.sheet = null;
+    if (done === 'unlock') { Sync.col && initSync(); toast('Unlocked'); } else { toast('PIN saved'); getState(P.pid).meta.pub = Date.now(); schedulePush(pfx(P.pid) + 'pub'); }
+    render();
+  } catch (e) {
+    P.busy = false; P.v = ''; P.first = P.mode === 'unlock' ? '' : P.first;
+    P.err = e.code === 'wrong_pin' ? 'Wrong PIN. Try again.' : e.code === 'too_many' ? `Too many tries. Wait ${Math.ceil((e.wait || 300) / 60)} min.` : 'Couldn’t reach the server. Try again.';
+    if (P.mode !== 'unlock') P.first = '';
+    render();
+  }
+}
+function lockCard() {
+  const n = esc(curProfile().name);
+  return `<div class="card lockcard"><div class="lockicon">🔒</div><h3>${n}’s info is locked</h3><p class="muted">Enter ${n}’s PIN to train, log food and see their weight and calorie targets. Ranking and exercises are open to everyone.</p>
+    <button class="btn primary big" data-act="pin-open">Enter PIN</button><button class="btn ghost big" data-act="sheet" data-s="profiles">Switch person</button></div>`;
 }
 
 function viewBuild() {
@@ -2771,12 +2856,17 @@ document.addEventListener('click', ev => {
     case 'mdate': UI.macroDate = shiftKey(UI.macroDate, +b.dataset.d); render(); break;
     case 'mdate-set': UI.macroDate = b.dataset.k; render(); break;
     case 'quick': { const f = S.settings.foods[+b.dataset.i]; const e = addEntry({ ...f, q: 1 }); const k = UI.macroDate; render(); toast(`Added ${f.name}`, { label: 'Undo', fn: () => { S.macros[k].entries = S.macros[k].entries.filter(x => x.id !== e.id); touch('m_' + k); render(); } }); break; }
-    case 'switch-prof': switchProfile(b.dataset.id); toast('Switched to ' + curProfile().name); break;
+    case 'switch-prof': switchProfile(b.dataset.id); if (UI.sheet !== 'pin') toast('Switched to ' + curProfile().name); break;
     case 'create-prof': createProfile(); break;
     case 'rk-p': UI.rk.p = b.dataset.v; render(); break;
     case 'rk-m': UI.rk.m = b.dataset.v; render(); break;
     case 'rk-l': UI.rk.l = b.dataset.v; render(); break;
     case 'week-plan': openWeekPlanner(); break;
+    case 'pin-key': pinKey(b.dataset.k); break;
+    case 'pin-del': if (UI.pin) { UI.pin.v = UI.pin.v.slice(0, -1); render(); } break;
+    case 'pin-open': openPin(curPid()); break;
+    case 'pin-change': openPin(curPid(), 'change'); break;
+    case 'lock-now': lockPerson(curPid()); UI.sheet = null; render(); toast('Locked'); break;
     case 'wk-part': { const i = +b.dataset.i, p = b.dataset.p, W = UI.week; W[i] = W[i].includes(p) ? W[i].filter(x => x !== p) : [...W[i], p]; render(); break; }
     case 'wk-clear': UI.week[+b.dataset.i] = []; render(); break;
     case 'wk-save': saveWeekPlan(); break;
@@ -2784,7 +2874,7 @@ document.addEventListener('click', ev => {
       if (!(w > 0 && w < 2000)) { er.textContent = 'Enter the weight in pounds.'; break; } if (!(r >= 1 && r <= 12)) { er.textContent = 'Reps must be 1 to 12.'; break; }
       const before = strengthOf(S).bests[id] || 0; S.settings.lifts = S.settings.lifts || {}; (S.settings.lifts[id] = S.settings.lifts[id] || []).push({ w, r, t: Date.now() }); touch('settings');
       const now = strengthOf(S).bests[id]; UI.sheet = null; render(); toast(now > before ? `New best: ${(LIFTS.find(l => l[0] === id) || [, id])[1]} ${now} lb` : 'Saved'); break; }
-    case 'iam': localSet('gymapp.me', b.dataset.id); switchProfile(b.dataset.id); toast('Hi ' + curProfile().name + '!'); break;
+    case 'iam': localSet('gymapp.me', b.dataset.id); switchProfile(b.dataset.id); if (UI.sheet !== 'pin') toast('Hi ' + curProfile().name + '!'); break;
     case 'newme': UI.newMe = true; UI.sheet = 'newprofile'; render(); break;
     case 'set-code': { const v = ($('#gc-in').value || '').trim(); if (!v) break; GROUP.code = v; localSet('gymapp.code', v); UI.sheet = null; Sync.col = null; render(); initSync(); break; }
     case 'del-prof': if (UI.confirm !== 'delprof:' + b.dataset.id) { UI.confirm = 'delprof:' + b.dataset.id; render(); } else { UI.confirm = null; deleteProfile(b.dataset.id); toast('Person deleted'); } break;
