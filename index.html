@@ -131,7 +131,7 @@ details{margin-top:10px}summary{color:var(--mut);cursor:pointer}
 option{background:#141027;color:#fff}
 .fchip{background:rgba(255,255,255,.05)}
 .calc div,.stats div{border:1px solid var(--line)}
-.splithead{display:flex;align-items:center;gap:8px;margin:2px 2px 8px}.splithead b{flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.splithead{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:2px 2px 8px}.shbtns{display:flex;gap:6px;width:100%}.shbtns .btn{flex:1;padding-left:4px;padding-right:4px}.splithead b{flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .buildcard{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(139,92,246,.18))}.buildcard div{flex:1;display:flex;flex-direction:column}.buildcard .btn{width:auto;margin:0;padding:10px 18px}
 .parts{margin:6px 0 4px}.pchip{background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--txt);border-radius:999px;padding:8px 14px;font:600 14px inherit;font-family:inherit}
 .pchip.on{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 6px 16px -8px rgba(236,72,153,.8)}
@@ -178,7 +178,14 @@ option{background:#141027;color:#fff}
 .rktop b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rkval{font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
 .rkbar{height:6px;border-radius:4px;background:rgba(255,255,255,.07);margin-top:6px;overflow:hidden}.rkbar i{display:block;height:100%;border-radius:4px;background:var(--grad)}.rkbar i.neg{background:#64748b}
 .scroll{overflow-x:auto}.rktable{width:100%;border-collapse:collapse;font-size:13px}.rktable th,.rktable td{padding:8px 6px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}.rktable th:first-child,.rktable td:first-child{text-align:left;color:var(--mut)}
-.rktable td.best{color:#f9a8d4;font-weight:800}.whoami{margin:10px 0 14px}.liftseg button{font-size:12px;padding:7px 2px}.strstats{margin:4px 0 8px;padding:0;background:none;border:0}.strtable td.up{color:#86efac;font-weight:700}.wkday{padding:10px 0;border-bottom:1px solid var(--line)}.wkday.today .wkhead b{color:#f0abfc}.wkhead{display:flex;align-items:center;gap:8px;margin-bottom:6px}.wkhead small{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wkday .parts .pchip{font-size:12px;padding:5px 9px}.pinpanel h3{font-size:19px}.pindots{display:flex;justify-content:center;gap:16px;margin:18px 0 6px}.pindots i{width:16px;height:16px;border-radius:50%;border:2px solid #a78bfa}.pindots i.on{background:var(--grad);border-color:transparent;box-shadow:0 0 10px rgba(236,72,153,.6)}.pindots.shake{animation:shk .35s}@keyframes shk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}.pinerr{text-align:center;min-height:18px}.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:300px;margin:8px auto}.pk{height:62px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;font-size:24px;font-weight:700;font-family:inherit}.pk.small{font-size:12px;color:var(--mut)}.pk:active{background:var(--grad)}.center{text-align:center}.lockcard{text-align:center}.lockicon{font-size:40px;margin:6px 0}.lockcard .btn{margin-top:8px;width:100%}.pinrow{display:flex;gap:8px;margin-top:10px}.pinrow .btn{flex:1}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rktable td.best{color:#f9a8d4;font-weight:800}.whoami{margin:10px 0 14px}.liftseg button{font-size:12px;padding:7px 2px}.strstats{margin:4px 0 8px;padding:0;background:none;border:0}.strtable td.up{color:#86efac;font-weight:700}.wkday{padding:10px 0;border-bottom:1px solid var(--line)}.wkday.today .wkhead b{color:#f0abfc}.wkhead{display:flex;align-items:center;gap:8px;margin-bottom:6px}.wkhead small{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wkday .parts .pchip{font-size:12px;padding:5px 9px}.pinpanel h3{font-size:19px}.pindots{display:flex;justify-content:center;gap:16px;margin:18px 0 6px}.pindots i{width:16px;height:16px;border-radius:50%;border:2px solid #a78bfa}.pindots i.on{background:var(--grad);border-color:transparent;box-shadow:0 0 10px rgba(236,72,153,.6)}.pindots.shake{animation:shk .35s}@keyframes shk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}.pinerr{text-align:center;min-height:18px}.pinpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:300px;margin:8px auto}.pk{height:62px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;font-size:24px;font-weight:700;font-family:inherit}.pk.small{font-size:12px;color:var(--mut)}.pk:active{background:var(--grad)}.center{text-align:center}.lockcard{text-align:center}.lockicon{font-size:40px;margin:6px 0}.lockcard .btn{margin-top:8px;width:100%}.pinrow{display:flex;gap:8px;margin-top:10px}.pinrow .btn{flex:1}.kflow{display:flex;align-items:center;gap:4px;margin:12px 0 10px;overflow-x:auto}.kflow div{flex:1;min-width:52px;text-align:center;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:7px 4px}.kflow small{display:block;font-size:10.5px;color:var(--mut);line-height:1.2}.kflow b{font-size:15px;font-variant-numeric:tabular-nums}.kflow i{font-style:normal;color:var(--mut);font-weight:800}.kflow .kgoal{background:var(--grad);border-color:transparent}.kflow .kgoal small{color:#fde7f3}
+.mstack{display:flex;gap:3px;height:46px;border-radius:12px;overflow:hidden;margin:4px 0}.msplit{display:flex;flex-direction:column;justify-content:center;align-items:center;min-width:56px}.msplit b{font-size:15px}.msplit small{font-size:11px;opacity:.85}.msplit.p{background:#db2777}.msplit.c{background:#6366f1}.msplit.f{background:#a855f7}.mpct{margin:6px 0}
+.tipline{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:13px;background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.35);border-radius:12px;padding:8px 10px;margin:8px 0}.tipline .btn{margin-left:auto}
+.linkbtn{background:none;border:0;color:#c4b5fd;font:600 13px inherit;font-family:inherit;padding:6px 0;cursor:pointer}.gdetail{margin:4px 0 8px}
+.wtopbtns{display:flex;gap:6px}.wexrow{display:flex;align-items:center;gap:6px}.wexrow .row{flex:1}.wexdel{flex:none}.wexdel.sure{width:auto;padding:0 10px;font-size:12px;color:#fda4af}
+.recline{display:flex;gap:8px;align-items:baseline;font-size:13px;background:rgba(250,204,21,.08);border:1px solid rgba(250,204,21,.28);border-radius:12px;padding:8px 10px;margin:8px 0}
+.fprow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.fprow .rowtxt{flex:1;min-width:0}.fprow .rowtxt small{display:block}.rkpick{margin:6px 0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 </style>
 </head>
 <body>
@@ -1783,7 +1790,38 @@ function suggestion(exId, target) {
 
 // ---------- Workout flow ----------
 function splitById(id) { return S.settings.splits.find(s => s.id === id); }
-function activeSplit() { return splitById(S.settings.activeSplit) || S.settings.splits[0]; }
+function activeSplit() { return resolveFollow(splitById(S.settings.activeSplit) || S.settings.splits[0]); }
+// a split can follow another person's current plan live; it shows their days and updates when they change it
+function resolveFollow(sp) {
+  if (!sp || !sp.follow) return sp;
+  const who = PROFILES.list.find(p => p.id === sp.follow), st = who && getState(sp.follow);
+  const os = st && (st.settings.splits.find(s => s.id === st.settings.activeSplit) || st.settings.splits[0]);
+  if (!os || os.follow) return { ...sp, days: sp.days && sp.days.length ? sp.days : [{ key: 'rest', name: 'Rest', ex: [] }] };
+  return { ...sp, name: `${who.name}’s plan`, days: os.days, weekly: !!os.weekly, live: true };
+}
+function followPlan(pid) {
+  const who = PROFILES.list.find(p => p.id === pid); if (!who) return;
+  let sp = S.settings.splits.find(s => s.follow === pid);
+  if (!sp) { sp = { id: 'f_' + pid, name: `${who.name}’s plan`, follow: pid, days: [] }; S.settings.splits.push(sp); }
+  S.settings.activeSplit = sp.id; S.settings.cycle = 0; S.settings.weekSeen = '';
+  UI.sheet = null; touch('settings'); UI.tab = 'train'; render(); window.scrollTo(0, 0); toast(`Following ${who.name}’s plan`);
+}
+function copyPlan(pid) {
+  const who = PROFILES.list.find(p => p.id === pid), st = getState(pid), os = activeSplitOf(st); if (!who || !os) return;
+  const sp = { id: uid(), name: `${who.name}’s plan (my copy)`, weekly: !!os.weekly, days: clone(resolveFollowOf(st, os).days) };
+  S.settings.splits.push(sp); S.settings.activeSplit = sp.id; S.settings.cycle = 0; S.settings.weekSeen = '';
+  UI.sheet = null; touch('settings'); UI.tab = 'train'; render(); window.scrollTo(0, 0); toast('Copied. You can edit your copy in Settings → Splits.');
+}
+function resolveFollowOf(st, sp) { return sp; }
+function viewFollow() {
+  const others = PROFILES.list.filter(p => p.id !== curPid());
+  return `<div class="panel"><div class="phead"><h3>Follow someone’s plan</h3><button class="x" data-act="close">✕</button></div>
+    <p class="small muted"><b>Follow</b> keeps you on their plan, and it updates when they change it. <b>Copy</b> gives you your own version to edit. Your weights and history stay your own either way.</p>
+    ${others.length ? others.map(p => { const st = getState(p.id), os = activeSplitOf(st); const tr = os ? os.days.filter(d => d.key !== 'rest').length : 0; const on = (splitById(S.settings.activeSplit) || {}).follow === p.id;
+      return `<div class="fprow"><span class="avatar">${esc((p.name || '?')[0].toUpperCase())}</span><div class="rowtxt"><b>${esc(p.name)}</b><small class="muted">${os && !os.follow ? `${esc(os.name)} · ${tr} training day${tr === 1 ? '' : 's'}${os.weekly ? ' · by weekday' : ''}` : 'No plan to share yet'}</small></div>
+        ${os && !os.follow ? `${on ? '<span class="badge">Following</span>' : `<button class="btn small primary" data-act="follow" data-id="${esc(p.id)}">Follow</button>`}<button class="btn small ghost" data-act="copyplan" data-id="${esc(p.id)}">Copy</button>` : ''}</div>`; }).join('') : '<p class="muted">Add more people first.</p>'}</div>`;
+}
+
 function routine() { return activeSplit().days; }
 function edSplit() { return splitById(UI.editSplit) || activeSplit(); }
 function startWorkout(dayIdx, custom) {
@@ -1914,12 +1952,28 @@ function strengthCard() {
     <p class="small muted">Best 1RM is estimated from your heaviest sets (weight × (1 + reps ÷ 30)). It updates from your workouts, or log a quick test set with "Log a max". The Big 3 are bench, squat and deadlift.${now.total && !now.complete ? ' Log all three for a full total.' : ''}</p></div>`;
 }
 
+// ---------- exercise records across the group (from shared workouts, never body weight) ----------
+function exBest(st, id, since = 0) {
+  let best = 0, at = null;
+  for (const s of Object.values(st.sessions || {})) { if (!s || !Array.isArray(s.ex) || s.start < since) continue; for (const e of s.ex) if (e.id === id) for (const z of (e.sets || [])) { const v = +z.r === 1 ? +z.w || 0 : e1rm(+z.w || 0, Math.min(+z.r || 0, 12)); if (v > best) { best = v; at = { w: +z.w, r: +z.r }; } } }
+  for (const x of (((st.settings || {}).lifts || {})[id] || [])) { if ((x.t || 0) < since) continue; const v = +x.r === 1 ? +x.w : e1rm(+x.w || 0, Math.min(+x.r || 0, 12)); if (v > best) { best = v; at = { w: +x.w, r: +x.r }; } }
+  return best ? { v: Math.round(best), set: at } : null;
+}
+function exLeaders(id, since = 0) {
+  return PROFILES.list.map(p => ({ p, b: exBest(getState(p.id), id, since) })).filter(x => x.b).sort((x, y) => y.b.v - x.b.v);
+}
+function recordLine(id) {
+  const L = exLeaders(id); if (!L.length) return '';
+  const top = L[0], mine = L.find(x => x.p.id === curPid()), me = top.p.id === curPid();
+  return `<div class="recline">🏆 <span>Best in the group: <b>${esc(top.p.name)}</b> ${top.b.v} lb <small class="muted">(est. 1RM · ${top.b.set.w}×${top.b.set.r})</small>${me ? ' · that’s you!' : mine ? ` · <span class="muted">You: ${mine.b.v} lb</span>` : ''}</span></div>`;
+}
+
 // ---------- Ranking: compare everyone in the group ----------
 const RK_PERIODS = [['week', 'This week', 7], ['month', '30 days', 30], ['all', 'All time', 0]];
 const RK_METRICS = [
   ['workouts', 'Workouts', 'workouts done'], ['sets', 'Sets', 'sets logged'], ['volume', 'Volume', 'lb lifted (weight × reps)'],
   ['days', 'Gym days', 'different days trained'], ['total', 'Big 3 total', 'best bench + squat + deadlift (estimated 1RM)'], ['ratio', 'Strength vs BW %', 'Big 3 total as a % of body weight, fair across sizes'],
-  ['lift', 'Best lift', 'estimated 1-rep max on one lift'], ['strength', 'Strength gain', 'average strength gain on repeated exercises'],
+  ['lift', 'Any exercise', 'estimated 1-rep max on one exercise'], ['strength', 'Strength gain', 'average strength gain on repeated exercises'],
   ['weight', 'Weight goal', 'body weight moved toward their goal'], ['protein', 'Protein', 'days protein target was hit'],
 ];
 function rkStats(pid, days, stIn, raw) {
@@ -1946,7 +2000,7 @@ function rkStats(pid, days, stIn, raw) {
   let protein = 0;
   if (tp) for (const [k, d] of Object.entries(st.macros || {})) { if (k < sinceKey || !d || !d.entries) continue; const p = d.entries.reduce((x, e) => x + (+e.p || 0), 0); if (p >= tp * 0.9) protein++; }
   const sg = strengthOf(st, 0); // strength is each person's best ever, whatever the period
-  const lift = sg.bests[(UI.rk && UI.rk.l) || 'bb_bench'] || null;
+  const lb = exBest(st, (UI.rk && UI.rk.l) || 'bb_bench'); const lift = lb ? lb.v : null;
   const res = { workouts: ss.length, sets, volume: Math.round(volume), days: dset.size, strength, weight, wDelta, protein, total: sg.total, ratio: sg.ratio, lift, liftBw: lift && sg.bw ? lift / sg.bw : null };
   // other people's personal numbers come from their shared summary, never from their private data
   if (!raw && GROUP.on && pid && pid !== curPid() && !(st.meta.priv > 0 && !locked(pid))) {
@@ -1969,6 +2023,16 @@ function rkFmt(m, s) {
   if (m === 'lift') return v + ' lb' + (s.liftBw && s.self ? ` <small class="muted">(${Math.round(s.liftBw * 100)}% of BW)</small>` : '');
   return String(v);
 }
+// every exercise anyone has logged comes first, then the rest
+function rkExOptions() {
+  const cur = (UI.rk && UI.rk.l) || 'bb_bench', logged = new Set();
+  for (const p of PROFILES.list) { const st = getState(p.id); for (const s of Object.values(st.sessions || {})) for (const e of (s.ex || [])) if ((e.sets || []).length) logged.add(e.id); for (const k of Object.keys((st.settings || {}).lifts || {})) logged.add(k); }
+  const byName = ids => ids.filter(id => EXERCISES[id]).sort((x, y) => EXERCISES[x].name.localeCompare(EXERCISES[y].name));
+  const o = id => `<option value="${id}" ${id === cur ? 'selected' : ''}>${esc(EXERCISES[id].name)}</option>`;
+  const L = byName([...logged]), R = byName(Object.keys(EXERCISES).filter(id => !logged.has(id)));
+  return (L.length ? `<optgroup label="Logged by someone">${L.map(o).join('')}</optgroup>` : '') + `<optgroup label="${L.length ? 'Not logged yet' : 'All exercises'}">${R.map(o).join('')}</optgroup>`;
+}
+
 function viewRanking() {
   UI.rk = UI.rk || { p: 'week', m: 'workouts' };
   const per = RK_PERIODS.find(x => x[0] === UI.rk.p) || RK_PERIODS[0], met = RK_METRICS.find(x => x[0] === UI.rk.m) || RK_METRICS[0];
@@ -1980,8 +2044,8 @@ function viewRanking() {
   let h = `<div class="card"><div class="phead"><h3>Ranking</h3><span class="small muted">${PROFILES.list.length} ${PROFILES.list.length === 1 ? 'person' : 'people'}</span></div>
     <div class="segs">${RK_PERIODS.map(([k, l]) => `<button class="${k === per[0] ? 'on' : ''}" data-act="rk-p" data-v="${k}">${l}</button>`).join('')}</div>
     <div class="chips rkchips">${RK_METRICS.map(([k, l]) => `<button class="pchip ${k === met[0] ? 'on' : ''}" data-act="rk-m" data-v="${k}">${l}</button>`).join('')}</div>
-    ${met[0] === 'lift' ? `<div class="segs liftseg">${LIFTS.map(([k, l]) => `<button class="${k === (UI.rk.l || 'bb_bench') ? 'on' : ''}" data-act="rk-l" data-v="${k}">${{ bb_bench: 'Bench', bb_squat: 'Squat', bb_deadlift: 'Deadlift', bb_ohp: 'OHP', bb_row: 'Row' }[k]}</button>`).join('')}</div>` : ''}
-    <p class="small muted rkdesc">${['total', 'ratio', 'lift'].includes(met[0]) ? 'Uses each person’s best ever. ' : ''}Ranked by ${met[2]}${met[0] === 'lift' ? ` (${(LIFTS.find(l => l[0] === (UI.rk.l || 'bb_bench')) || LIFTS[0])[1].toLowerCase()})` : ''}.</p>`;
+    ${met[0] === 'lift' ? `<label class="rkpick">Exercise<select data-act="rk-ex">${rkExOptions()}</select></label><div class="segs liftseg">${LIFTS.map(([k, l]) => `<button class="${k === (UI.rk.l || 'bb_bench') ? 'on' : ''}" data-act="rk-l" data-v="${k}">${{ bb_bench: 'Bench', bb_squat: 'Squat', bb_deadlift: 'Deadlift', bb_ohp: 'OHP', bb_row: 'Row' }[k]}</button>`).join('')}</div>` : ''}
+    <p class="small muted rkdesc">${['total', 'ratio', 'lift'].includes(met[0]) ? 'Uses each person’s best ever. ' : ''}Ranked by ${met[2]}${met[0] === 'lift' ? ` (${esc((EXERCISES[UI.rk.l || 'bb_bench'] || { name: '' }).name.toLowerCase())})` : ''}.</p>`;
   if (!ranked.length) h += `<p class="muted">No one has ${met[0] === 'weight' ? 'logged their weight' : met[0] === 'protein' ? 'hit their protein target' : ['total', 'ratio', 'lift'].includes(met[0]) ? 'logged this lift (Progress → Strength → Log a max)' : 'logged a workout'} ${per[0] === 'all' ? 'yet' : 'in this period'}.</p>`;
   h += `<div class="rklist">${ranked.map((r, i) => { const v = r.s[met[0]], w = Math.max(4, Math.abs(v) / top * 100);
     return `<div class="rkrow ${r.p.id === curPid() ? 'me' : ''} ${i === 0 ? 'lead' : ''}"><span class="rkmed">${medal(i)}</span><span class="avatar sm">${esc((r.p.name || '?')[0].toUpperCase())}</span><div class="rkmain"><div class="rktop"><b>${esc(r.p.name)}</b><span class="rkval">${rkFmt(met[0], r.s)}</span></div><div class="rkbar"><i style="width:${w.toFixed(1)}%" class="${v < 0 ? 'neg' : ''}"></i></div></div></div>`; }).join('')}
@@ -1999,7 +2063,7 @@ function viewHome() {
   if (activeSplit().weekly && S.settings.weekSeen !== dateKey()) { S.settings.cycle = todayIdx(); S.settings.weekSeen = dateKey(); }
   if (S.settings.cycle >= routine().length) S.settings.cycle = 0;
   const c = S.settings.cycle, day = routine()[c], nd = routine().length;
-  let h = `<div class="splithead"><span class="muted small">Split</span><b>${esc(activeSplit().name)}</b><button class="btn small ghost" data-act="week-plan">${weekSplit() ? 'Edit my week' : 'Plan my week'}</button><button class="btn small ghost" data-act="goto-splits">Change</button></div>`;
+  let h = `<div class="splithead"><span class="muted small">Split</span><b>${esc(activeSplit().name)}</b><div class="shbtns"><button class="btn small ghost" data-act="week-plan">${weekSplit() ? 'Edit my week' : 'Plan my week'}</button><button class="btn small ghost" data-act="sheet" data-s="follow">Follow</button><button class="btn small ghost" data-act="goto-splits">Change</button></div></div>`;
   h += `<div class="cycle" style="grid-template-columns:repeat(${Math.min(nd, 7)},1fr)">${routine().map((d, i) => `<button class="cday ${i === c ? 'on' : ''} ${d.key === 'rest' ? 'rest' : ''}" data-act="set-cycle" data-i="${i}"><small>${activeSplit().weekly ? WEEKDAYS[i].slice(0, 3) + (i === todayIdx() ? ' · today' : '') : 'Day ' + (i + 1)}</small>${esc(d.name)}</button>`).join('')}</div>`;
   if (S.active) h += '';
   if (day.key === 'rest') {
@@ -2037,12 +2101,13 @@ function viewWorkout() {
   const wVal = lastSet ? lastSet.w : sg.w;
   const rVal = lastSet ? lastSet.r : '';
   const last = lastFor(e.id, a.start);
-  let h = `<div class="wtop"><div><b>${esc(a.name)}</b> <span class="muted">· <span data-tick="elapsed"></span></span></div><button class="btn small ghost" data-act="sheet" data-s="list">Exercise ${a.i + 1}/${a.ex.length} ▾</button></div>
+  let h = `<div class="wtop"><div><b>${esc(a.name)}</b> <span class="muted">· <span data-tick="elapsed"></span></span></div><div class="wtopbtns"><button class="btn small ghost" data-act="sheet" data-s="addex">+ Add</button><button class="btn small ghost" data-act="sheet" data-s="list">Exercise ${a.i + 1}/${a.ex.length} ▾</button></div></div>
   <div class="pbar"><i style="width:${Math.round(doneSets / Math.max(1, totalSets) * 100)}%"></i></div>
   <div id="nudge" class="nudge" hidden></div>
   <div class="card ex">
     <div class="exhead"><div><h2>${esc(ex.name)}</h2><small class="muted">${esc(ex.muscles || '')}</small></div><button class="btn small ghost" data-act="info" data-id="${e.id}">How to</button></div>
     ${demoPanel(e.id)}
+    ${recordLine(e.id)}
     <div class="target">${done ? `<b>All ${e.target.sets} sets done</b>` : `<b>Set ${n} of ${e.target.sets}</b>`} · ${e.target.lo}–${e.target.hi} reps · rest ${e.target.rest}s</div>
     ${last ? `<div class="lasttime"><span class="muted">Last time (${fmtDate(last.date, { month: 'short', day: 'numeric' })}):</span> ${last.sets.map(s => `<span class="chip">${s.w}×${s.r}</span>`).join('')}</div>` : ''}
     ${!e.sets.length ? `<div class="tip ${sg.up ? 'up' : ''}">${sg.up ? '↑ ' : ''}${esc(sg.note)}</div>` : ''}
@@ -2065,6 +2130,7 @@ function viewSheet() {
   const a = S.active;
   if (UI.sheet === 'pin' && UI.pin) return viewPin();
   if (UI.sheet === 'week') return viewWeekPlanner();
+  if (UI.sheet === 'follow') return viewFollow();
   if (UI.sheet === 'liftlog') {
     return `<div class="panel"><div class="phead"><h3>Log a max</h3><button class="x" data-act="close">✕</button></div>
       <p class="small muted">Enter your heaviest set. A true 1-rep max is fine, or any set of up to 12 reps and it estimates the 1RM.</p>
@@ -2102,8 +2168,15 @@ function viewSheet() {
   if (UI.sheet === 'list' && a) {
     return `<div class="panel"><div class="phead"><h3>Exercises</h3><button class="x" data-act="close">✕</button></div>${a.ex.map((x, i) => {
       const ex = EXERCISES[x.id] || { name: x.id }; const st = x.sets.length >= x.target.sets ? '✓' : x.skipped ? 'skipped' : `${x.sets.length}/${x.target.sets}`;
-      return `<button class="row ${i === a.i ? 'cur' : ''}" data-act="goto" data-i="${i}"><span class="thumb">${demoSvg(x.id)}</span><span class="rowtxt"><b>${esc(ex.name)}</b><small>${x.target.sets} × ${x.target.lo}–${x.target.hi}</small></span><span class="st">${st}</span></button>`;
-    }).join('')}</div>`;
+      return `<div class="wexrow"><button class="row ${i === a.i ? 'cur' : ''}" data-act="goto" data-i="${i}"><span class="thumb">${demoSvg(x.id)}</span><span class="rowtxt"><b>${esc(ex.name)}</b><small>${x.target.sets} × ${x.target.lo}–${x.target.hi}</small></span><span class="st">${st}</span></button>${a.ex.length > 1 ? `<button class="x wexdel ${UI.confirm === 'wdel:' + i ? 'sure' : ''}" data-act="wex-del" data-i="${i}" aria-label="Remove">${UI.confirm === 'wdel:' + i ? 'Remove?' : '✕'}</button>` : ''}</div>`;
+    }).join('')}<button class="btn primary big" data-act="sheet" data-s="addex">+ Add an exercise</button></div>`;
+  }
+  if (UI.sheet === 'addex' && a) {
+    UI.ax = UI.ax || { q: '', part: '' };
+    return `<div class="panel"><div class="phead"><h3>Add an exercise</h3><button class="x" data-act="sheet" data-s="list">‹ Back</button></div>
+      <input id="ax-q" placeholder="Search exercises" value="${esc(UI.ax.q)}" autocomplete="off">
+      <div class="chips parts">${['All', ...PARTS_LIST].map(p => `<button class="pchip ${(UI.ax.part || 'All') === p ? 'on' : ''}" data-act="ax-part" data-p="${p}">${p}</button>`).join('')}</div>
+      <div class="blist" id="ax-list">${axList()}</div></div>`;
   }
   if (UI.sheet === 'finish' && a) {
     const sets = a.ex.reduce((s, x) => s + x.sets.length, 0), vol = a.ex.reduce((s, x) => s + x.sets.reduce((t, y) => t + y.w * y.r, 0), 0);
@@ -2210,12 +2283,32 @@ function recalcTargets(why, force) {
   touch('settings'); return true;
 }
 function goalCard() {
-  const p = S.settings.profile, m = MODE_OF(p.goal), note = S.settings.tnote;
+  const p = S.settings.profile, m = MODE_OF(p.goal), note = S.settings.tnote, c = calcTargets(p), t = targets();
   const showNote = note && note.d && (Date.now() - parseKey(note.d).getTime()) < 7 * 864e5;
-  return `<div class="card goalcard"><div class="phead"><h3>Goal</h3><small class="muted">${p.weightLb} lb</small></div>
+  const adj = c.kcal - c.tdee, act = (ACTIVITY.find(x => x[0] === p.activity) || [p.activity, ''])[1].split(':')[0];
+  const custom = t.p !== c.p || t.c !== c.c || t.f !== c.f;
+  const seg = (lbl, g, kc, cls) => `<div class="msplit ${cls}" style="flex:${Math.max(1, kc)}"><b>${g}g</b><small>${lbl}</small></div>`;
+  const kc = { p: t.p * 4, c: t.c * 4, f: t.f * 9 }, tot = kc.p + kc.c + kc.f || 1;
+  return `<div class="card goalcard"><div class="phead"><h3>Calorie & macro calculator</h3></div>
     <div class="segs goalseg">${[['cut', 'Cut'], ['maintain', 'Maintain'], ['bulk', 'Bulk']].map(([k, l]) => `<button class="${m === k ? 'on' : ''}" data-act="gmode" data-m="${k}">${l}</button>`).join('')}</div>
     ${PACES[m] ? `<div class="chips pace">${PACES[m].map(([g, l]) => `<button class="pchip ${p.goal === g ? 'on' : ''}" data-act="gpace" data-g="${g}">${m === 'cut' ? 'Lose' : 'Gain'} ${l}</button>`).join('')}</div>` : ''}
-    <label class="chk"><input type="checkbox" data-act="autot" ${autoOn() ? 'checked' : ''}> Update my macros automatically when I log a new weight</label>
+    <div class="kflow">
+      <div><small>Resting burn</small><b>${c.bmr.toLocaleString()}</b></div><i>×</i>
+      <div><small>Activity</small><b>${p.activity}</b></div><i>=</i>
+      <div><small>Daily burn</small><b>${c.tdee.toLocaleString()}</b></div><i>${adj < 0 ? '−' : '+'}</i>
+      <div><small>${m === 'cut' ? 'Deficit' : m === 'bulk' ? 'Surplus' : 'Adjust'}</small><b>${Math.abs(adj).toLocaleString()}</b></div><i>=</i>
+      <div class="kgoal"><small>Your target</small><b>${c.kcal.toLocaleString()}</b></div>
+    </div>
+    <div class="mstack">${seg('protein', t.p, kc.p, 'p')}${seg('carbs', t.c, kc.c, 'c')}${seg('fat', t.f, kc.f, 'f')}</div>
+    <p class="small muted mpct">${Math.round(kc.p / tot * 100)}% protein · ${Math.round(kc.c / tot * 100)}% carbs · ${Math.round(kc.f / tot * 100)}% fat · ${t.kcal.toLocaleString()} kcal/day${custom ? ' <span class="badge">custom</span>' : ''}</p>
+    ${custom ? `<div class="tipline">Suggested for your goal: ${c.p}P · ${c.c}C · ${c.f}F (${c.kcal.toLocaleString()} kcal) <button class="btn small ghost" data-act="apply-calc">Use suggested</button></div>` : ''}
+    <button class="linkbtn" data-act="gcalc">${UI.gcalc ? '▾ Hide details' : '▸ Edit targets & see how it’s worked out'}</button>
+    ${UI.gcalc ? `<div class="gdetail">
+      <div class="mgrid three"><label>Protein g<input data-tgt="p" type="number" inputmode="numeric" value="${t.p}"></label><label>Carbs g<input data-tgt="c" type="number" inputmode="numeric" value="${t.c}"></label><label>Fat g<input data-tgt="f" type="number" inputmode="numeric" value="${t.f}"></label></div>
+      <div class="kcalcalc" id="tgt-kcal">= ${t.kcal.toLocaleString()} kcal per day</div>
+      <p class="small muted">Based on ${p.heightFt}′${p.heightIn}″ · ${p.weightLb} lb · ${p.age} · ${p.sex === 'f' ? 'female' : 'male'} · ${esc(act.toLowerCase())}${c.lean ? ` · ${p.bodyFat}% body fat` : ''}. ${c.formula} formula, protein about ${c.lean ? '1 g per lb of lean mass' : '0.8 g per lb of body weight'}, fat about 27% of calories, carbs fill the rest. <button class="linkbtn" data-act="tab" data-tab="settings">Edit my stats</button></p>
+    </div>` : ''}
+    <label class="chk"><input type="checkbox" data-act="autot" ${autoOn() ? 'checked' : ''}> Recalculate automatically when I log a new weight</label>
     ${showNote ? `<div class="tnote">${esc(note.msg)}</div>` : ''}
     <div class="inline bwrow"><input id="bw-m" type="number" inputmode="decimal" placeholder="Today’s weight (lb)"><button class="btn ghost" data-act="log-bw-m">Log weight</button></div></div>`;
 }
@@ -2280,12 +2373,7 @@ function viewSettings() {
   <div class="card"><div class="phead"><h3>${esc(curProfile().name)}’s profile</h3><button class="btn small ghost" data-act="sheet" data-s="profiles">Switch person</button></div>
     <label>Name<input data-pname value="${esc(curProfile().name)}" maxlength="30"></label>
     ${profileForm(p, 'data-prof')}
-    <div class="calc"><div><small>Resting burn</small><b>${calc.bmr.toLocaleString()}</b></div><div><small>Daily burn</small><b>${calc.tdee.toLocaleString()}</b></div><div><small>Suggested</small><b>${calc.kcal.toLocaleString()}</b></div></div>
-    <p class="small muted">Suggested: ${calc.p}g protein · ${calc.c}g carbs · ${calc.f}g fat. Uses the ${calc.formula} formula, protein at about ${calc.lean ? '1 g per lb of lean mass' : '0.8 g per lb of body weight'}, and about 27% of calories from fat.</p>
-    <button class="btn ghost" data-act="apply-calc">Use suggested targets</button></div>
-  <div class="card"><div class="phead"><h3>Daily macro targets</h3></div>
-    <div class="mgrid three"><label>Protein g<input data-tgt="p" type="number" inputmode="numeric" value="${t.p}"></label><label>Carbs g<input data-tgt="c" type="number" inputmode="numeric" value="${t.c}"></label><label>Fat g<input data-tgt="f" type="number" inputmode="numeric" value="${t.f}"></label></div>
-    <div class="kcalcalc" id="tgt-kcal">= ${t.kcal.toLocaleString()} kcal per day</div></div>`;
+    <div class="tipline">Daily target: <b>${t.kcal.toLocaleString()} kcal</b> · ${t.p}P · ${t.c}C · ${t.f}F <button class="btn small ghost" data-act="goto-calc">Open calculator</button></div></div>`;
   h += viewSplits();
   h += `<div class="card"><div class="phead"><h3>Workout options</h3></div>
     <label class="toggle"><input type="checkbox" data-opt="sound" ${S.settings.sound ? 'checked' : ''}> Beep when rest is over</label>
@@ -2724,6 +2812,24 @@ function lockCard() {
     <button class="btn primary big" data-act="pin-open">Enter PIN</button><button class="btn ghost big" data-act="sheet" data-s="profiles">Switch person</button></div>`;
 }
 
+function axList() {
+  const a = S.active, q = (UI.ax.q || '').toLowerCase(), part = UI.ax.part && UI.ax.part !== 'All' ? UI.ax.part : '';
+  const ids = Object.keys(EXERCISES).filter(id => (!part || (PARTS[id] || []).includes(part)) && (!q || EXERCISES[id].name.toLowerCase().includes(q)));
+  return ids.map(id => { const ex = EXERCISES[id], inW = a.ex.some(x => x.id === id);
+    return `<button class="row brow ${inW ? 'on' : ''}" data-act="wex-add" data-id="${id}"><span class="thumb">${demoSvg(id)}</span><span class="rowtxt"><b>${esc(ex.name)}</b><small class="muted">${(PARTS[id] || []).join(' · ')}${ex.free ? ' · dumbbell' : ''}</small></span><span class="check">${inW ? '✓' : '+'}</span></button>`; }).join('') || '<p class="muted">No matches.</p>';
+}
+function addToWorkout(id) {
+  const a = S.active, d = defaultsFor(id);
+  a.ex.splice(a.i + 1, 0, { id, target: { sets: d.sets, lo: d.lo, hi: d.hi, rest: d.rest }, sets: [] });
+  touch('active'); toast(`Added ${EXERCISES[id].name} as up next`);
+}
+function removeFromWorkout(i) {
+  const a = S.active; if (a.ex.length <= 1) return;
+  a.ex.splice(i, 1);
+  if (a.i > i || a.i >= a.ex.length) a.i = Math.max(0, a.i - 1);
+  UI.confirm = null; touch('active');
+}
+
 function viewBuild() {
   const B = UI.build || { parts: [], picked: [] };
   let h = `<div class="panel"><div class="phead"><h3>Build your own workout</h3><button class="x" data-act="close">✕</button></div>
@@ -2750,9 +2856,10 @@ function viewSplits() {
   const sp = edSplit(), act = activeSplit();
   const opt = (v, cur, l) => `<option value="${v}" ${String(v) === String(cur) ? 'selected' : ''}>${l}</option>`;
   const exOpts = cur => Object.entries(EXERCISES).map(([id, e]) => opt(id, cur, esc(e.name) + (e.free ? ' (DB)' : ''))).join('');
-  let h = `<div class="card" id="splits"><div class="phead"><h3>Splits</h3><div><button class="btn small ghost" data-act="week-plan">${weekSplit() ? 'Edit my week' : 'Plan my week'}</button> <button class="btn small primary" data-act="sheet" data-s="newsplit">+ New split</button></div></div>
+  let h = `<div class="card" id="splits"><div class="phead"><h3>Splits</h3><div><button class="btn small ghost" data-act="sheet" data-s="follow">Follow someone</button> <button class="btn small ghost" data-act="week-plan">${weekSplit() ? 'Edit my week' : 'Plan my week'}</button> <button class="btn small primary" data-act="sheet" data-s="newsplit">+ New split</button></div></div>
     <p class="small muted">Use sets the split the Train tab follows. Tap a split to edit it.</p>
     ${S.settings.splits.map(s => `<div class="splitrow ${s.id === sp.id ? 'ed' : ''}"><button class="row" data-act="edit-split" data-id="${s.id}"><span class="rowtxt"><b>${esc(s.name)}</b><small class="muted">${s.days.length} days · ${s.days.filter(d => d.key !== 'rest').length} training${s.id === sp.id ? ' · editing' : ''}</small></span></button>${s.id === act.id ? '<span class="badge">In use</span>' : `<button class="btn small ghost" data-act="use-split" data-id="${s.id}">Use</button>`}</div>`).join('')}</div>`;
+  if (sp.follow) { const w = PROFILES.list.find(p => p.id === sp.follow); return h + `<div class="card" id="spedit"><div class="phead"><h3>${esc(w ? w.name : 'Their')}’s plan</h3></div><p class="muted">You’re following this plan, so it changes when they change it. Make a copy if you want to edit it.</p><button class="btn ghost" data-act="copyplan" data-id="${esc(sp.follow)}">Make my own copy</button></div>`; }
   h += `<div class="card" id="spedit"><div class="phead"><h3>Edit split</h3></div>
     <label>Split name<input data-sp="name" value="${esc(sp.name)}" maxlength="60"></label>
     ${sp.days.map((d, di) => {
@@ -2819,8 +2926,8 @@ document.addEventListener('click', ev => {
     case 'info': UI.sheet = 'info:' + b.dataset.id; if (UI.view !== 'motion') UI.view = bestView(b.dataset.id); render(); const pn = document.querySelector('#sheet .panel'); if (pn) pn.scrollTop = 0; break;
     case 'close': UI.sheet = null; render(); break;
     case 'sheet': if (b.dataset.s === 'build') UI.build = { parts: [], picked: [], save: S.settings.activeSplit }; UI.sheet = b.dataset.s; render(); break;
-    case 'len-ex': { const day = routine()[S.settings.cycle]; if (!day) break; if (+b.dataset.d > 0) { const id = addExToDay(day); if (!id) { toast('No more exercises fit this day'); break; } toast(`Added ${EXERCISES[id].name}`); } else if (day.ex.length > 1) { const e = day.ex.pop(); toast(`Removed ${(EXERCISES[e.id] || {}).name || 'an exercise'}`); } touch('settings'); render(); break; }
-    case 'len-min': { const day = routine()[S.settings.cycle]; if (!day) break; setDayLength(day, +b.dataset.m); touch('settings'); toast(`${day.ex.length} exercises, about ${dayMins(day)} min`); render(); break; }
+    case 'len-ex': { const day = routine()[S.settings.cycle]; if (!day) break; if (activeSplit().live) { toast('You’re following someone’s plan. Copy it to change the length.'); break; } if (+b.dataset.d > 0) { const id = addExToDay(day); if (!id) { toast('No more exercises fit this day'); break; } toast(`Added ${EXERCISES[id].name}`); } else if (day.ex.length > 1) { const e = day.ex.pop(); toast(`Removed ${(EXERCISES[e.id] || {}).name || 'an exercise'}`); } touch('settings'); render(); break; }
+    case 'len-min': { const day = routine()[S.settings.cycle]; if (!day) break; if (activeSplit().live) { toast('You’re following someone’s plan. Copy it to change the length.'); break; } setDayLength(day, +b.dataset.m); touch('settings'); toast(`${day.ex.length} exercises, about ${dayMins(day)} min`); render(); break; }
     case 'goto-splits': UI.tab = 'settings'; UI.editSplit = S.settings.activeSplit; render(); setTimeout(() => { const el = document.getElementById('splits'); if (el) el.scrollIntoView(); }, 30); break;
     case 'use-split': S.settings.activeSplit = b.dataset.id; S.settings.cycle = 0; UI.editSplit = b.dataset.id; touch('settings'); toast('Now following ' + splitById(b.dataset.id).name); render(); break;
     case 'edit-split': UI.editSplit = b.dataset.id; UI.routineOpen = null; render(); break;
@@ -2863,6 +2970,13 @@ document.addEventListener('click', ev => {
     case 'rk-m': UI.rk.m = b.dataset.v; render(); break;
     case 'rk-l': UI.rk.l = b.dataset.v; render(); break;
     case 'week-plan': openWeekPlanner(); break;
+    case 'follow': followPlan(b.dataset.id); break;
+    case 'copyplan': copyPlan(b.dataset.id); break;
+    case 'wex-add': addToWorkout(b.dataset.id); UI.sheet = null; render(); break;
+    case 'wex-del': { const i = +b.dataset.i, key = 'wdel:' + i; if (S.active.ex[i].sets.length && UI.confirm !== key) { UI.confirm = key; render(); break; } removeFromWorkout(i); render(); break; }
+    case 'ax-part': UI.ax.part = b.dataset.p; render(); break;
+    case 'gcalc': UI.gcalc = !UI.gcalc; render(); break;
+    case 'goto-calc': UI.tab = 'macros'; UI.gcalc = true; render(); setTimeout(() => { const el = document.querySelector('.goalcard'); if (el) el.scrollIntoView(); }, 30); break;
     case 'pin-key': pinKey(b.dataset.k); break;
     case 'pin-del': if (UI.pin) { UI.pin.v = UI.pin.v.slice(0, -1); render(); } break;
     case 'pin-open': openPin(curPid()); break;
@@ -2938,12 +3052,13 @@ document.addEventListener('input', ev => {
   const el = ev.target;
   if (el.id === 'lib-q') { UI.lib.q = el.value; $('#lib-list').innerHTML = libList(); }
   if (el.id === 'lk-q') lkRefresh(true);
+  if (el.id === 'ax-q') { UI.ax.q = el.value; $('#ax-list').innerHTML = axList(); }
   if (el.id === 'lk-amt') lkPreview();
   if (el.closest && el.closest('#foodform')) { const q = num($('#f-q').value) || 1; $('#f-kcal').textContent = kcalOf(num($('#f-p').value) * q, num($('#f-c').value) * q, num($('#f-f').value) * q) + ' kcal'; }
   if (el.dataset.pname != null && el.hasAttribute('data-pname')) { curProfile().name = el.value.slice(0, 30) || 'Me'; touchProfiles(); $('#pname') && ($('#pname').textContent = curProfile().name); }
   if (el.dataset.sp === 'name') { edSplit().name = el.value.slice(0, 60) || 'My split'; touch('settings'); }
   if (el.dataset.day) { const [di, f] = el.dataset.day.split('.'); const d = edSplit().days[+di]; if (f === 'name') { d.name = el.value.slice(0, 40); touch('settings'); } }
-  if (el.dataset.tgt) { S.settings.targets[el.dataset.tgt] = Math.max(0, Math.round(num(el.value))); S.settings.autoT = false; touch('settings'); $('#tgt-kcal').textContent = `= ${targets().kcal.toLocaleString()} kcal per day`; }
+  if (el.dataset.tgt) { S.settings.targets[el.dataset.tgt] = Math.max(0, Math.round(num(el.value))); S.settings.autoT = false; touch('settings'); $('#tgt-kcal') && ($('#tgt-kcal').textContent = `= ${targets().kcal.toLocaleString()} kcal per day`); }
 });
 document.addEventListener('change', ev => {
   const el = ev.target;
@@ -2954,6 +3069,7 @@ document.addEventListener('change', ev => {
   if (el.dataset.opt) { S.settings[el.dataset.opt] = el.checked; touch('settings'); }
   if (el.dataset.rt) { const [di, ei, f] = el.dataset.rt.split('.'); const e = edSplit().days[+di].ex[+ei]; e[f] = f === 'id' ? el.value : Math.max(f === 'rest' ? 0 : 1, Math.round(num(el.value))); if (e.lo > e.hi) e.hi = e.lo; touch('settings'); if (f === 'id') render(); }
   if (el.dataset.act === 'prog-ex') { UI.progEx = el.value; render(); }
+  if (el.dataset.act === 'rk-ex') { UI.rk.l = el.value; render(); }
 });
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { if (S.active) keepAwake(true); tick(); } });
 
