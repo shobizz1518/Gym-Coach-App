@@ -2981,7 +2981,7 @@ function recordLine(id) {
 }
 
 // ---------- Ranking: compare everyone in the group ----------
-const RK_PERIODS = [['week', 'This week', 7], ['month', '30 days', 30], ['all', 'All time', 0]];
+const RK_PERIODS = [['today', 'Today', 1], ['week', 'This week', 7], ['month', '30 days', 30], ['all', 'All time', 0]];
 const RK_METRICS = [
   ['workouts', 'Workouts', 'workouts done'], ['sets', 'Sets', 'sets logged'], ['volume', 'Volume', 'lb lifted (weight × reps)'],
   ['days', 'Gym days', 'different days trained'], ['total', 'Big 3 total', 'best bench + squat + deadlift (estimated 1RM)'], ['ratio', 'Strength vs BW %', 'Big 3 total as a % of body weight, fair across sizes'],
@@ -2990,7 +2990,7 @@ const RK_METRICS = [
   ['weight', 'Weight goal', 'body weight moved toward their goal'], ['protein', 'Protein', 'days protein target was hit'],
 ];
 function rkStats(pid, days, stIn, raw) {
-  const st = stIn || getState(pid), since = days ? Date.now() - days * 864e5 : 0, sinceKey = days ? dateKey(new Date(since)) : '0000';
+  const st = stIn || getState(pid), since = days === 1 ? new Date(new Date().setHours(0, 0, 0, 0)).getTime() : days ? Date.now() - days * 864e5 : 0, sinceKey = days ? dateKey(new Date(since)) : '0000';
   const ss = Object.values(st.sessions || {}).filter(s => s && s.start >= since && Array.isArray(s.ex));
   let sets = 0, volume = 0; const dset = new Set();
   for (const s of ss) { dset.add(dateKey(new Date(s.start))); for (const e of s.ex) for (const z of (e.sets || [])) { sets++; volume += (+z.w || 0) * (+z.r || 0); } }
